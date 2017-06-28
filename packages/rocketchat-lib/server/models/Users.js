@@ -13,6 +13,10 @@ class ModelUsers extends RocketChat.models._Base {
 		this.cache.ensureIndex('username', 'unique');
 	}
 
+	find(query, options = {}) {
+		return options.sort ? this._db.find(query, options): super.find(query, options);
+	}
+
 	findOneByImportId(_id, options) {
 		return this.findOne({ importIds: _id }, options);
 	}

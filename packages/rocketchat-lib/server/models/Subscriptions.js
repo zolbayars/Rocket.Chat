@@ -26,6 +26,9 @@ class ModelSubscriptions extends RocketChat.models._Base {
 		this.cache.ensureIndex(['name', 'u._id'], 'unique');
 	}
 
+	find(query, options = {}) {
+		return options.sort ? this._db.find(query, options): super.find(query, options);
+	}
 
 	// FIND ONE
 	findOneByRoomIdAndUserId(roomId, userId) {

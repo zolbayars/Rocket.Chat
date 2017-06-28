@@ -13,6 +13,10 @@ class ModelRooms extends RocketChat.models._Base {
 		this.cache.options = {fields: {usernames: 0}};
 	}
 
+	find(query, options = {}) {
+		return options.sort ? this._db.find(query, options): super.find(query, options);
+	}
+
 	findOneByIdOrName(_idOrName, options) {
 		const query = {
 			$or: [{

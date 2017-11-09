@@ -250,9 +250,34 @@ jobs:
 
             aws s3 cp $ROCKET_DEPLOY_DIR/ s3://download.rocket.chat/build/ --recursive
 
-            bash .circleci/update-releases.sh
-            bash .circleci/docker.sh
+            # bash .circleci/update-releases.sh
+            # bash .circleci/docker.sh
             bash .circleci/snap.sh
+
+      - setup_remote_docker
+
+      - run:
+          name: Build Docker image
+          command: |
+            if [[ $CIRCLE_PULL_REQUESTS ]]; then exit 0; fi;
+
+            cp .docker/Dockerfile /tmp/build
+            cd /tmp/build
+            rm Rocket.Chat.tar.gz
+
+            export CIRCLE_TAG=${CIRCLE_TAG:=}
+            source .circleci/setartname.sh
+
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+
+            docker build --build-arg RC_VERSION=$RC_VERSION -t rocketchat/rocket.chat:$RC_VERSION .
+
+            docker tag rocketchat/rocket.chat:$RC_VERSION rocketchat/rocket.chat:$DOCKER_TAG
+            docker push rocketchat/rocket.chat:$DOCKER_TAG
+
+            if [[ $DOCKER_TAG != "develop" ]]; then
+              docker push rocketchat/rocket.chat:$RC_VERSION
+            fi;
 
 workflows:
   version: 2

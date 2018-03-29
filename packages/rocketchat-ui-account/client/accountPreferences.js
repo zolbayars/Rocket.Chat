@@ -13,7 +13,7 @@ function checkedSelected(property, value, defaultValue=undefined) {
 	if (defaultValue && defaultValue.hash) {
 		defaultValue = undefined;
 	}
-	return RocketChat.getUserPreference(Meteor.user(), property, defaultValue) === value;
+	return RocketChat.getUserPreference(Meteor.userId(), property, defaultValue) === value;
 }
 
 Template.accountPreferences.helpers({
@@ -21,13 +21,13 @@ Template.accountPreferences.helpers({
 		return (RocketChat.CustomSounds && RocketChat.CustomSounds.getList && RocketChat.CustomSounds.getList()) || [];
 	},
 	newMessageNotification() {
-		return RocketChat.getUserPreference(Meteor.user(), 'newMessageNotification');
+		return RocketChat.getUserPreference(Meteor.userId(), 'newMessageNotification');
 	},
 	newRoomNotification() {
-		return RocketChat.getUserPreference(Meteor.user(), 'newRoomNotification');
+		return RocketChat.getUserPreference(Meteor.userId(), 'newRoomNotification');
 	},
 	muteFocusedConversations() {
-		return RocketChat.getUserPreference(Meteor.user(), 'muteFocusedConversations');
+		return RocketChat.getUserPreference(Meteor.userId(), 'muteFocusedConversations');
 	},
 	languages() {
 		const languages = TAPi18n.getLanguages();
@@ -56,7 +56,7 @@ Template.accountPreferences.helpers({
 		return checkedSelected(property, value, defaultValue);
 	},
 	highlights() {
-		const userHighlights = RocketChat.getUserPreference(Meteor.user(), 'highlights');
+		const userHighlights = RocketChat.getUserPreference(Meteor.userId(), 'highlights');
 		return userHighlights ? userHighlights.join('\n') : undefined;
 	},
 	desktopNotificationEnabled() {
@@ -66,14 +66,14 @@ Template.accountPreferences.helpers({
 		return KonchatNotification.notificationStatus.get() === 'denied' || (window.Notification && Notification.permission === 'denied');
 	},
 	desktopNotificationDuration() {
-		const userPref = RocketChat.getUserPreference(Meteor.user(), 'desktopNotificationDuration', 'undefined');
+		const userPref = RocketChat.getUserPreference(Meteor.userId(), 'desktopNotificationDuration', 'undefined');
 		return userPref !== 'undefined' ? userPref : undefined;
 	},
 	defaultDesktopNotificationDuration() {
 		return RocketChat.settings.get('Accounts_Default_User_Preferences_desktopNotificationDuration');
 	},
 	idleTimeLimit() {
-		return RocketChat.getUserPreference(Meteor.user(), 'idleTimeLimit');
+		return RocketChat.getUserPreference(Meteor.userId(), 'idleTimeLimit');
 	},
 	defaultIdleTimeLimit() {
 		return RocketChat.settings.get('Accounts_Default_User_Preferences_idleTimeoutLimit');
@@ -88,7 +88,7 @@ Template.accountPreferences.helpers({
 		return RocketChat.settings.get('UI_DisplayRoles');
 	},
 	notificationsSoundVolume() {
-		return RocketChat.getUserPreference(Meteor.user(), 'notificationsSoundVolume');
+		return RocketChat.getUserPreference(Meteor.userId(), 'notificationsSoundVolume');
 	}
 });
 
@@ -156,7 +156,7 @@ Template.accountPreferences.onCreated(function() {
 		}
 
 		// if highlights changed we need page reload
-		const highlights = RocketChat.getUserPreference(Meteor.user(), 'highlights');
+		const highlights = RocketChat.getUserPreference(Meteor.userId(), 'highlights');
 		if (highlights && highlights.join('\n') !== data.highlights.join('\n')) {
 			reload = true;
 		}

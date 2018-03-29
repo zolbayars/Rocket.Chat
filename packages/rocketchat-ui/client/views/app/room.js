@@ -11,7 +11,10 @@ const isSubscribed = _id => ChatSubscription.find({ rid: _id }).count() > 0;
 
 const favoritesEnabled = () => RocketChat.settings.get('Favorite_Rooms');
 
-const userCanDrop = _id => !RocketChat.roomTypes.readOnly(_id, Meteor.user());
+const userCanDrop = _id => {
+	const user = RocketChat.models.Users.findOne({ _id: Meteor.userId() }, { fields: { username: 1 } });
+	return !RocketChat.roomTypes.readOnly(_id, user);
+};
 
 const openProfileTab = (e, instance, username) => {
 	const roomData = Session.get(`roomData${ Session.get('openedRoom') }`);
@@ -313,13 +316,11 @@ Template.room.helpers({
 	},
 
 	hideUsername() {
-		const user = Meteor.user();
-		return RocketChat.getUserPreference(user, 'hideUsernames') ? 'hide-usernames' : undefined;
+		return RocketChat.getUserPreference(Meteor.userId(), 'hideUsernames') ? 'hide-usernames' : undefined;
 	},
 
 	hideAvatar() {
-		const user = Meteor.user();
-		return RocketChat.getUserPreference(user, 'hideAvatars') ? 'hide-avatars' : undefined;
+		return RocketChat.getUserPreference(Meteor.userId(), 'hideAvatars') ? 'hide-avatars' : undefined;
 	},
 
 	userCanDrop() {

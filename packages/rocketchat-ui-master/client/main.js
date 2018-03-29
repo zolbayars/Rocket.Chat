@@ -120,6 +120,7 @@ Template.main.helpers({
 		return RocketChat.settings.get('Site_Name');
 	},
 	logged() {
+		console.log('logged');
 		if (Meteor.userId() != null || (RocketChat.settings.get('Accounts_AllowAnonymousRead') === true && Session.get('forceLogin') !== true)) {
 			$('html').addClass('noscroll').removeClass('scroll');
 			return true;
@@ -137,6 +138,7 @@ Template.main.helpers({
 		return iframeEnabled && RocketChat.iframeLogin.reactiveIframeUrl.get();
 	},
 	subsReady() {
+		console.log('subsReady');
 		const routerReady = FlowRouter.subsReady('userData', 'activeUsers');
 		const subscriptionsReady = CachedChatSubscription.ready.get();
 		const settingsReady = RocketChat.settings.cachedCollection.ready.get();
@@ -148,10 +150,13 @@ Template.main.helpers({
 		return ready;
 	},
 	hasUsername() {
-		return (Meteor.userId() != null && Meteor.user().username != null) || (Meteor.userId() == null && RocketChat.settings.get('Accounts_AllowAnonymousRead') === true);
+		console.log('hasUsername');
+		const user = RocketChat.models.Users.findOne({ _id: Meteor.userId() }, { fields: { username: 1 } });
+		return (Meteor.userId() != null && user.username != null) || (Meteor.userId() == null && RocketChat.settings.get('Accounts_AllowAnonymousRead') === true);
 	},
 	requirePasswordChange() {
-		const user = Meteor.user();
+		console.log('requirePasswordChange');
+		const user = RocketChat.models.Users.findOne({ _id: Meteor.userId() }, { fields: { requirePasswordChange: 1 } });
 		return user && user.requirePasswordChange === true;
 	},
 	CustomScriptLoggedOut() {

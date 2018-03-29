@@ -5,7 +5,7 @@ import toastr from 'toastr';
 
 Template.loginForm.helpers({
 	userName() {
-		const user = Meteor.user();
+		const user = RocketChat.models.Users.findOne({ _id: Meteor.userId() }, { fields: { username: 1 } });
 		return user && user.username;
 	},
 	namePlaceholder() {

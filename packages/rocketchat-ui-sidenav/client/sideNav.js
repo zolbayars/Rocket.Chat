@@ -14,6 +14,7 @@ Template.sideNav.helpers({
 	},
 
 	roomType() {
+		console.log('roomType');
 		return RocketChat.roomTypes.getTypes().map((roomType) => {
 			return {
 				template: roomType.customTemplate || 'roomList',
@@ -37,7 +38,7 @@ Template.sideNav.helpers({
 	},
 
 	sidebarHideAvatar() {
-		return RocketChat.getUserPreference(Meteor.user(), 'sidebarHideAvatar');
+		return RocketChat.getUserPreference(Meteor.userId(), 'sidebarHideAvatar');
 	}
 });
 

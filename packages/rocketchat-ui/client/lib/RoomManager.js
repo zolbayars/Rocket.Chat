@@ -16,7 +16,7 @@ const RoomManager = new function() {
 					if (record.active !== true || record.ready === true) { return; }
 					const ready = CachedChatRoom.ready.get() && RocketChat.mainReady.get();
 					if (ready !== true) { return; }
-					const user = Meteor.user();
+					const user = RocketChat.models.Users.findOne({ _id: Meteor.userId() }, { fields: { username: 1 } });
 
 					const type = typeName.substr(0, 1);
 					const name = typeName.substr(1);
@@ -262,7 +262,7 @@ Meteor.startup(() => {
 	// Reload rooms after login
 	let currentUsername = undefined;
 	Tracker.autorun(() => {
-		const user = Meteor.user();
+		const user = RocketChat.models.Users.findOne({ _id: Meteor.userId() }, { fields: { username: 1 } });
 		if ((currentUsername === undefined) && ((user != null ? user.username : undefined) != null)) {
 			currentUsername = user.username;
 			RoomManager.closeAllRooms();

@@ -28,8 +28,10 @@ FlowRouter.route('/', {
 		Tracker.autorun(function(c) {
 			if (FlowRouter.subsReady() === true) {
 				Meteor.defer(function() {
-					if (Meteor.user() && Meteor.user().defaultRoom) {
-						const room = Meteor.user().defaultRoom.split('/');
+					console.log('index-router');
+					const user = RocketChat.models.Users.findOne({ _id: Meteor.userId() }, { fields: { defaultRoom: 1 } });
+					if (user && user.defaultRoom) {
+						const room = user.defaultRoom.split('/');
 						FlowRouter.go(room[0], { name: room[1] }, FlowRouter.current().queryParams);
 					} else {
 						FlowRouter.go('home');

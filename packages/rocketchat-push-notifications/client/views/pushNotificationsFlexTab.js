@@ -72,21 +72,21 @@ Template.pushNotificationsFlexTab.helpers({
 		}
 	},
 	defaultAudioNotification() {
-		let preference = RocketChat.getUserPreference(Meteor.user(), 'audioNotifications');
+		let preference = RocketChat.getUserPreference(Meteor.userId(), 'audioNotifications');
 		if (preference === 'default') {
 			preference = RocketChat.settings.get('Accounts_Default_User_Preferences_audioNotifications');
 		}
 		return notificationLabels[preference];
 	},
 	defaultDesktopNotification() {
-		let preference = RocketChat.getUserPreference(Meteor.user(), 'desktopNotifications');
+		let preference = RocketChat.getUserPreference(Meteor.userId(), 'desktopNotifications');
 		if (preference === 'default') {
 			preference = RocketChat.settings.get('Accounts_Default_User_Preferences_desktopNotifications');
 		}
 		return notificationLabels[preference];
 	},
 	defaultMobileNotification() {
-		let preference = RocketChat.getUserPreference(Meteor.user(), 'mobileNotifications');
+		let preference = RocketChat.getUserPreference(Meteor.userId(), 'mobileNotifications');
 		if (preference === 'default') {
 			preference = RocketChat.settings.get('Accounts_Default_User_Preferences_mobileNotifications');
 		}
@@ -344,7 +344,7 @@ Template.pushNotificationsPopover.helpers({
 		return Template.instance().data.options;
 	},
 	defaultDesktopNotification() {
-		let preference = RocketChat.getUserPreference(Meteor.user(), 'desktopNotifications');
+		let preference = RocketChat.getUserPreference(Meteor.userId(), 'desktopNotifications');
 		if (preference === 'default') {
 			preference = RocketChat.settings.get('Accounts_Default_User_Preferences_desktopNotifications');
 		}

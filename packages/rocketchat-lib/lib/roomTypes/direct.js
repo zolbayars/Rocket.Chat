@@ -61,8 +61,7 @@ export class DirectMessageRoomType extends RoomTypeConfig {
 	}
 
 	condition() {
-		const user = Meteor.user();
-		const mergeChannels = RocketChat.getUserPreference(user, 'mergeChannels');
+		const mergeChannels = RocketChat.getUserPreference(Meteor.userId(), 'mergeChannels');
 		return !mergeChannels && RocketChat.authz.hasAtLeastOnePermission(['view-d-room', 'view-joined-room']);
 	}
 
@@ -72,7 +71,8 @@ export class DirectMessageRoomType extends RoomTypeConfig {
 			return;
 		}
 
-		return Session.get(`user_${ subscription.name }_status`);
+		return 'online';
+		// return Session.get(`user_${ subscription.name }_status`);
 	}
 
 	getDisplayName(room) {

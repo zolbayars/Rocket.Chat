@@ -79,22 +79,16 @@ export const RoomHistoryManager = new class {
 				return;
 			}
 
-			let previousHeight;
 			const { messages = [] } = result;
 			room.unreadNotLoaded.set(result.unreadNotLoaded);
 			room.firstUnread.set(result.firstUnread);
 
 			const wrapper = $('.messages-box .wrapper').get(0);
-			if (wrapper != null) {
-				previousHeight = wrapper.scrollHeight;
-			}
 
-			messages.forEach((msg) => msg.t !== 'command' && upsertMessage({ msg, subscription }));
-
-			if (wrapper) {
-				const heightDiff = wrapper.scrollHeight - previousHeight;
-				wrapper.scrollTop += heightDiff;
-			}
+			const previousHeight = wrapper && wrapper.scrollHeight;
+			messages.filter((msg) => msg.t !== 'command')
+				.forEach((msg) => upsertMessage({ msg, subscription }));
+			wrapper && (wrapper.scrollTop = wrapper.scrollHeight - previousHeight);
 
 			Meteor.defer(() => {
 				readMessage.refreshUnreadMark(rid, true);

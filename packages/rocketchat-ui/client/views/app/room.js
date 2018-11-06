@@ -248,12 +248,10 @@ Template.room.helpers({
 			});
 		});
 
-		const query =
-			{ rid: this._id };
+		const query = { rid: this._id };
 
 		if (hideMessagesOfType.length > 0) {
-			query.t =
-				{ $nin: hideMessagesOfType };
+			query.t = { $nin: hideMessagesOfType };
 		}
 
 		const options = {
@@ -263,6 +261,30 @@ Template.room.helpers({
 		};
 
 		return ChatMessage.find(query, options);
+
+		// const dummyCollection = new Mongo.Collection(null);
+		// // let opBuffer = [];
+		// // const wrapper = $('.messages-box .wrapper').get(0);
+		// const push = (op) => {
+		// 	op();
+		// 	// opBuffer.push(op);
+		// 	// if (opBuffer.length >= 10) {
+		// 	// 	((ops) => setTimeout(() => {
+		// 	// 		const previousHeight = wrapper && wrapper.scrollHeight;
+		// 	// 		ops.forEach((op) => op());
+		// 	// 		wrapper && (wrapper.scrollTop = wrapper.scrollHeight - previousHeight);
+		// 	// 	}, 100))(opBuffer);
+		// 	// 	opBuffer = [];
+		// 	// }
+		// };
+
+		// cursor.observe({
+		// 	added: (record) => push(() => dummyCollection.insert(record)),
+		// 	changed: (record) => push(() => dummyCollection.upsert(record)),
+		// 	removed: (record) => push(() => dummyCollection.remove(record)),
+		// });
+
+		// return dummyCollection.find(query, options);
 	},
 
 	hasMore() {

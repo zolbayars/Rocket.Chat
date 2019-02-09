@@ -172,6 +172,15 @@ const toolbarButtons = (user) => [{
 	},
 },
 {
+	name: t('Send_sms_with_mobex'),
+	icon: 'icon-send-sms',
+	condition: () => hasAtLeastOnePermission(['create-c', 'create-p']),
+	action: () => {
+		menu.close();
+		FlowRouter.go('create-channel');
+	},
+},
+{
 	name: t('Options'),
 	icon: 'menu',
 	condition: () => AccountBox.getItems().length || hasAtLeastOnePermission(['manage-emoji', 'manage-integrations', 'manage-oauth-apps', 'manage-own-integrations', 'manage-sounds', 'view-logs', 'view-privileged-setting', 'view-room-administration', 'view-statistics', 'view-user-administration']),

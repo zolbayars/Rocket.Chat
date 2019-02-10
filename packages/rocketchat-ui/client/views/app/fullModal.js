@@ -8,11 +8,15 @@ const parent = document.querySelector('.main-content');
 FlowRouter.route('/create-channel', {
 	name: 'create-channel',
 
+
 	triggersEnter: [function() {
 		oldRoute = FlowRouter.current().oldRoute;
 	}],
 
 	action() {
+
+		console.log("called create-channel", FlowRouter.current());
+
 		if (parent) {
 			Blaze.renderWithData(Template.fullModal, { template: 'createChannel' }, parent);
 		} else {
@@ -29,11 +33,14 @@ FlowRouter.route('/create-channel', {
 FlowRouter.route('/send-sms', {
 	name: 'send-sms',
 
+
 	triggersEnter: [function() {
 		oldRoute = FlowRouter.current().oldRoute;
 	}],
 
 	action() {
+
+		console.log("called send-sms", FlowRouter.current());
 		if (parent) {
 			Blaze.renderWithData(Template.fullModal, { template: 'sendSMS' }, parent);
 		} else {

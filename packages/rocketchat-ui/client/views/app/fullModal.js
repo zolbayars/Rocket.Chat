@@ -35,7 +35,7 @@ FlowRouter.route('/send-sms', {
 
 
 	triggersEnter: [function() {
-		oldRoute = FlowRouter.current().oldRoute;
+		oldRoute = null;
 	}],
 
 	action() {

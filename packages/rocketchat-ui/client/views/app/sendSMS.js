@@ -54,7 +54,7 @@ const filterNames = (old) => {
 	return [...old.replace(' ', '').toLocaleLowerCase()].filter((f) => reg.test(f)).join('');
 };
 
-Template.createChannel.helpers({
+Template.sendSMS.helpers({
 	autocomplete(key) {
 		const instance = Template.instance();
 		const param = instance.ac[key];
@@ -168,7 +168,7 @@ Template.createChannel.helpers({
 	},
 });
 
-Template.createChannel.events({
+Template.sendSMS.events({
 	...acEvents,
 	'click .rc-tags__tag'({ target }, t) {
 		const { username } = Blaze.getData(target);
@@ -238,7 +238,7 @@ Template.createChannel.events({
 		const extraData = Object.keys(instance.extensions_submits)
 			.reduce((result, key) => ({ ...result, ...instance.extensions_submits[key](instance) }), { broadcast, encrypted });
 
-		Meteor.call(isPrivate ? 'createPrivateGroup' : 'createChannel', name, instance.selectedUsers.get().map((user) => user.username), readOnly, {}, extraData, function(err, result) {
+		Meteor.call(isPrivate ? 'createPrivateGroup' : 'sendSMS', name, instance.selectedUsers.get().map((user) => user.username), readOnly, {}, extraData, function(err, result) {
 			if (err) {
 				if (err.error === 'error-invalid-name') {
 					return instance.invalid.set(true);
@@ -259,7 +259,7 @@ Template.createChannel.events({
 	},
 });
 
-Template.createChannel.onRendered(function() {
+Template.sendSMS.onRendered(function() {
 	const users = this.selectedUsers;
 
 	this.firstNode.querySelector('[name="users"]').focus();
@@ -272,7 +272,7 @@ Template.createChannel.onRendered(function() {
 	});
 });
 
-Template.createChannel.onCreated(function() {
+Template.sendSMS.onCreated(function() {
 	this.selectedUsers = new ReactiveVar([]);
 
 	const filter = { exceptions :[Meteor.user().username].concat(this.selectedUsers.get().map((u) => u.username)) };

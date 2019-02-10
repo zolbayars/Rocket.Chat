@@ -49,6 +49,7 @@ FlowRouter.route('/send-sms', {
 
 Template.fullModal.events({
 	'click button'() {
+		console.log("oldRoute", oldRoute);
 		oldRoute ? history.back() : FlowRouter.go('home');
 	},
 });

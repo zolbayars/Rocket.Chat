@@ -173,11 +173,11 @@ const toolbarButtons = (user) => [{
 },
 {
 	name: t('Send_sms_with_mobex'),
-	icon: 'icon-send-sms',
+	icon: 'send-sms',
 	condition: () => hasAtLeastOnePermission(['create-c', 'create-p']),
 	action: () => {
 		menu.close();
-		FlowRouter.go('create-channel');
+		FlowRouter.go('send-sms');
 	},
 },
 {

@@ -26,6 +26,27 @@ FlowRouter.route('/create-channel', {
 	}],
 });
 
+FlowRouter.route('/send-sms', {
+	name: 'send-sms',
+
+	triggersEnter: [function() {
+		oldRoute = FlowRouter.current().oldRoute;
+	}],
+
+	action() {
+		if (parent) {
+			Blaze.renderWithData(Template.fullModal, { template: 'sendSMS' }, parent);
+		} else {
+			BlazeLayout.render('main', { center: 'fullModal', template: 'sendSMS' });
+		}
+	},
+
+	triggersExit: [function() {
+		Blaze.remove(Blaze.getView(document.getElementsByClassName('full-modal')[0]));
+		$('.main-content').addClass('rc-old');
+	}],
+});
+
 Template.fullModal.events({
 	'click button'() {
 		oldRoute ? history.back() : FlowRouter.go('home');

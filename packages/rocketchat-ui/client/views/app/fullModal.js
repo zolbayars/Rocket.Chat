@@ -8,7 +8,6 @@ const parent = document.querySelector('.main-content');
 FlowRouter.route('/create-channel', {
 	name: 'create-channel',
 
-
 	triggersEnter: [function() {
 		oldRoute = FlowRouter.current().oldRoute;
 	}],
@@ -19,29 +18,6 @@ FlowRouter.route('/create-channel', {
 			Blaze.renderWithData(Template.fullModal, { template: 'createChannel' }, parent);
 		} else {
 			BlazeLayout.render('main', { center: 'fullModal', template: 'createChannel' });
-		}
-	},
-
-	triggersExit: [function() {
-		Blaze.remove(Blaze.getView(document.getElementsByClassName('full-modal')[0]));
-		$('.main-content').addClass('rc-old');
-	}],
-});
-
-FlowRouter.route('/send-sms', {
-	name: 'send-sms',
-
-
-	triggersEnter: [function() {
-		oldRoute = null;
-	}],
-
-	action() {
-
-		if (parent) {
-			Blaze.renderWithData(Template.fullModal, { template: 'sendSMS' }, parent);
-		} else {
-			BlazeLayout.render('main', { center: 'fullModal', template: 'sendSMS' });
 		}
 	},
 

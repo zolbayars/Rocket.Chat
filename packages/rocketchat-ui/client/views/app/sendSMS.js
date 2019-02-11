@@ -56,20 +56,23 @@ import _ from 'underscore';
 // };
 //
 
+const numberList = {
+	18139900996: "+18139900996",
+	18139990990: "+18139990990",
+	17272708181: "+17272708181",
+	12129181876: "+12129181876",
+	12028755580: "+12028755580",
+	18135638800: "+18135638800",
+	18339568700: "+18339568700",
+	18558766239: "+18558766239",
+	18448555611: "+18448555611",
+	18132804355: "+18132804355",
+}
 
 Template.sendSMS.helpers({
 	fromNumbers() {
-		const numbers = TAPi18n.getLanguages();
-		console.log(numbers);
-		const result = Object.entries(numbers)
-			.map(([key, language]) => ({ ...language, key: key.toLowerCase() }))
-			.sort((a, b) => a.key - b.key);
-
-		result.unshift({
-			name: 'Default',
-			en: 'Default',
-			key: '',
-		});
+		const result = Object.entries(numberList)
+			.map(([number, formattedNumber]) => ({ name: formattedNumber, key: number }));
 
 		return result;
 	},

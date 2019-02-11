@@ -56,11 +56,12 @@ import _ from 'underscore';
 // };
 //
 
-Template.sendSMS.helpers({
-	languages() {
-		const languages = TAPi18n.getLanguages();
 
-		const result = Object.entries(languages)
+Template.sendSMS.helpers({
+	fromNumbers() {
+		const numbers = TAPi18n.getLanguages();
+		console.log(numbers);
+		const result = Object.entries(numbers)
 			.map(([key, language]) => ({ ...language, key: key.toLowerCase() }))
 			.sort((a, b) => a.key - b.key);
 
@@ -71,10 +72,6 @@ Template.sendSMS.helpers({
 		});
 
 		return result;
-	},
-	isAppLanguage(key) {
-		const languageKey = RocketChat.settings.get('Language');
-		return typeof languageKey === 'string' && languageKey.toLowerCase() === key;
 	},
 });
 // Template.sendSMS.helpers({

@@ -3,6 +3,26 @@
 		{{> header sectionName="Send SMS with Mobex" hideHelp=true fullpage=true}}
 		<div class="rc-table-content">
 
+
+
+
+				<div class="rc-input">
+					<label class="rc-input__label">
+						<div class="rc-input__title">{{_ "Send_sms_with_mobex_from"}}</div>
+						<div class="rc-input__wrapper">
+
+							<div class="rc-select">
+								<select class="input-monitor rc-select__element" name="{{_id}}" {{isDisabled}} {{isReadonly}}>
+									{{#each fromNumbers}}
+									<option value="{{key}}" dir="auto">{{name}}</option>
+									{{/each}}
+								</select>
+								{{> icon block="rc-select__arrow" icon="arrow-down" }}
+							</div>
+						</div>
+					</label>
+				</div>
+
 				<div class="rc-input {{#if invalidChannel}}rc-input--error{{/if}}">
 					<label class="rc-input__label">
 						<div class="rc-input__title">{{_ "Send_sms_with_mobex_to_number"}}</div>
@@ -24,14 +44,7 @@
 					{{/if}}
 				</div>
 
-				<div class="rc-select">
-					<select class="input-monitor rc-select__element" name="{{_id}}" {{isDisabled}} {{isReadonly}}>
-						{{#each languages}}
-						<option value="{{key}}" selected="{{isAppLanguage key}}" dir="auto">{{name}}</option>
-						{{/each}}
-					</select>
-					{{> icon block="rc-select__arrow" icon="arrow-down" }}
-				</div>
+
 
 				<!-- <div class="rc-select">
 					<select class="input-monitor rc-select__element" name="{{_id}}" {{isDisabled}} {{isReadonly}}>

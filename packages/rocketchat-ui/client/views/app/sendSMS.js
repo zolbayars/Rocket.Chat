@@ -9,6 +9,8 @@ import { settings } from 'meteor/rocketchat:settings';
 import { callbacks } from 'meteor/rocketchat:callbacks';
 import { t, roomTypes } from 'meteor/rocketchat:utils';
 import { hasAllPermission } from 'meteor/rocketchat:authorization';
+import { RocketChat, handleError } from 'meteor/rocketchat:lib';
+import { TAPi18n } from 'meteor/tap:i18n';
 import _ from 'underscore';
 
 // const acEvents = {
@@ -70,7 +72,11 @@ Template.sendSMS.helpers({
 		});
 
 		return result;
-	}
+	},
+	isAppLanguage(key) {
+		const languageKey = RocketChat.settings.get('Language');
+		return typeof languageKey === 'string' && languageKey.toLowerCase() === key;
+	},
 });
 // Template.sendSMS.helpers({
 // 	autocomplete(key) {

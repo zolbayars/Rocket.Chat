@@ -3,6 +3,26 @@
 		{{> header sectionName="Send SMS with Mobex" hideHelp=true fullpage=true}}
 		<div class="rc-table-content">
 
+				<div class="rc-input {{#if invalidChannel}}rc-input--error{{/if}}">
+					<label class="rc-input__label">
+						<div class="rc-input__title">{{_ "Send_sms_with_mobex_to_number"}}</div>
+						<div class="rc-input__wrapper">
+							<div class="rc-input__icon">
+								{{> icon block="rc-input__icon-svg" icon="message" }}
+							</div>
+							<input name="name" type="text" class="rc-input__element"
+									 placeholder="{{_ "Send_sms_with_mobex_to_number_placeholder"}}" autofocus>
+						</div>
+					</label>
+					{{#if inUse}}
+						<div class="rc-input__error">
+							<div class="rc-input__error-icon">
+								{{> icon block="rc-input__error-icon" icon="warning" classes="rc-input__error-icon-svg"}}
+							</div>
+							<div class="rc-input__error-message">{{_ "Channel_already_exist_static"}}</div>
+						</div>
+					{{/if}}
+				</div>
 
 		</div>
 	</section>

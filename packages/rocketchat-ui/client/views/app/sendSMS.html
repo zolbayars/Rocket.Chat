@@ -1,91 +1,121 @@
 <template name="sendSMS">
 	<section class="send-sms">
-		{{#each roomType in roomTypesBeforeStandard}}
-			<div class="room-type-creation">
-				{{> Template.dynamic template=roomType.creationTemplate }}
-			</div>
-		{{/each}}
-		<div class="send-sms__wrapper">
-			<header class="send-sms__header">
-				<h1 class="send-sms__title">{{_ "Send_sms_with_mobex"}}</h1>
-				<p class="send-sms__description">{{_ "Send_sms_with_mobex_description"}}</p>
-			</header>
-			<form class="send-sms__content">
-				<div class="send-sms__inputs">
-					<div class="rc-input {{#if invalidChannel}}rc-input--error{{/if}}">
-						<label class="rc-input__label">
-							<div class="rc-input__title">{{_ "Channel_name"}}</div>
-							<div class="rc-input__wrapper">
-								<div class="rc-input__icon">
-									{{> icon block="rc-input__icon-svg" icon=iconType }}
-								</div>
-								<input name="name" type="text" class="rc-input__element"
-									   placeholder="{{_ "Channel_Name_Placeholder"}}" autofocus>
-							</div>
-						</label>
-						{{#if inUse}}
-							<div class="rc-input__error">
-								<div class="rc-input__error-icon">
-									{{> icon block="rc-input__error-icon" icon="warning" classes="rc-input__error-icon-svg"}}
-								</div>
-								<div class="rc-input__error-message">{{_ "Channel_already_exist_static"}}</div>
-							</div>
-						{{/if}}
+		{{> header sectionName="Send SMS with Mobex" hideHelp=true fullpage=true}}
+		<div class="rc-table-content">
+			{{>tabs tabs=tabsData}}
+			<div class="rc-input rc-input--small send-sms-search">
+				<label class="rc-input__label">
+					<div class="rc-input__wrapper">
+						{{> icon icon="magnifier" block="rc-input__icon" }}
+						<input type="text" class="rc-input__element rc-input__element--small js-search" name="message-search" id="message-search" placeholder={{#if $eq searchType 'channels'}}{{_ "Search_Channels"}}{{/if}}{{#if $eq searchType 'users'}}{{_ "Search_Users"}}{{/if}} autocomplete="off">
 					</div>
-					<div class="rc-input">
-						<label class="rc-input__label">
-							<div class="rc-input__title">{{_ "Invite_Users"}}</div>
-							<div class="rc-input__wrapper">
-								<div class="rc-input__icon">
-									{{> icon block="rc-input__icon-svg" icon="at"}}
-								</div>
-								<div class="rc-tags">
-									{{#each user in selectedUsers}}
-										{{> tag user}}
-									{{/each}}
-									<input type="text" class="rc-tags__input" placeholder="{{_ "Username_Placeholder"}}"
-										   name="users" autocomplete="off"/>
-								</div>
-							</div>
-							{{#with config}}
-								{{#if autocomplete 'isShowing'}}
-									<div class="fadeInDown">
-										{{#if autocomplete 'isLoaded'}}
-											{{> popupList data=config items=items}}
-										{{/if}}
+				</label>
+			</div>
+			{{#if $eq searchType 'channels'}}
+				{{#table fixed='true' onItemClick=onTableItemClick onScroll=onTableScroll onResize=onTableResize onSort=onTableSort}}
+					<thead>
+						<tr>
+							<th class="js-sort {{#if searchSortBy 'name'}}is-sorting{{/if}}" data-sort="name">
+								<div class="table-fake-th"><span>{{_ "Name"}}</span> {{> icon icon=(sortIcon 'name')}}</div>
+							</th>
+							<th class="send-sms-td--users js-sort {{#if searchSortBy 'usersCount'}}is-sorting{{/if}}" data-sort="usersCount">
+								<div class="table-fake-th"><span>{{_ "Users"}}</span> {{> icon icon=(sortIcon 'usersCount')}}</div>
+							</th>
+							{{#if showLastMessage}}
+							<th class="table-column-date">
+								<div class="table-fake-th">{{_ "Last_Message"}}</div>
+							</th>
+							{{/if}}
+							<th class="js-sort table-column-date {{#if searchSortBy 'createdAt'}}is-sorting{{/if}}" data-sort="createdAt">
+								<div class="table-fake-th"><span>{{_ "Created_at"}}</span> {{> icon icon=(sortIcon 'createdAt') }}</div>
+							</th>
+							<th>
+								<div class="table-fake-th"><span>{{_ "Topic"}}</span></div>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						{{#each searchResults}}
+							<tr data-name="{{name}}">
+								<td>
+									<div class="rc-table-wrapper">
+										<div class="rc-table-avatar">{{> avatar username=name roomIcon="true"}}</div>
+										<div class="rc-table-info">
+											<span class="rc-table-title">
+												{{>icon icon="hashtag" block="send-sms-icon"}}
+												{{name}}
+											</span>
+										</div>
 									</div>
+								</td>
+								<td>{{users}}</td>
+								{{#if showLastMessage}}
+									<td class="table-column-date">{{lastMessage}}</td>
 								{{/if}}
+								<td class="table-column-date">{{createdAt}}</td>
+								<td>{{topic}}</td>
+							</tr>
+						{{else}}
+							{{# with searchText}}
+								<tr class="table-no-click">
+									<td>{{_ "No_results_found_for"}} {{.}}</td>
+								</tr>
 							{{/with}}
-						</label>
-					</div>
-				</div>
-				{{#if tokenAccessEnabled}}
-					<div class="send-sms__switches">
-						<div class="rc-switch">
-							<label class="rc-switch__label" tabindex="-1">
-								<input type="checkbox" class="rc-switch__input" name="setTokensRequired" {{tokenIsDisabled}}>
-								<span class="rc-switch__button">
-									<span class="rc-switch__button-inside"></span>
-								</span>
-								<span class="rc-switch__text">
-									{{_ "Token_Controlled_Access"}}
-								</span>
-							</label>
-						</div>
-					</div>
-					{{#if tokensRequired}}
-						<!-- {{> tokenpass extensionsConfig}} -->
-					{{/if}}
-				{{/if}}
-				<div class="send-sms__inputs">
-					<input class="rc-button rc-button--primary" type='submit' data-button="create" {{createIsDisabled}} value="{{_ "Create"}}" />
-				</div>
-			</form>
+						{{/each}}
+						{{#if isLoading}}
+							<tr class="table-no-click">
+								<td class="table-loading-td" colspan="{{#if showLastMessage}}5{{else}}4{{/if}}">{{> loading}}</td>
+							</tr>
+						{{/if}}
+					</tbody>
+				{{/table}}
+			{{/if}}
+			{{#if $eq searchType 'users'}}
+				{{#table onItemClick=onTableItemClick onScroll=onTableScroll onResize=onTableResize onSort=onTableSort}}
+					<thead>
+						<tr>
+							<th class="js-sort {{#if searchSortBy 'name'}}is-sorting{{/if}}" data-sort="name">
+								<div class="table-fake-th"><span>{{_ "Name"}}</span> {{> icon icon=(sortIcon 'name') }}</div>
+							</th>
+							<th class="js-sort {{#if searchSortBy 'username'}}is-sorting{{/if}}" data-sort="username">
+								<div class="table-fake-th"><span>{{_ "Username"}}</span> {{> icon icon=(sortIcon 'username') }}</div>
+							</th>
+							<th class="js-sort table-column-date {{#if searchSortBy 'createdAt'}}is-sorting{{/if}}" data-sort="createdAt">
+								<div class="table-fake-th"><span>{{_ "Created_at"}}</span> {{> icon icon=(sortIcon 'createdAt') }}</div>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						{{#each searchResults}}
+							<tr data-name="{{name}}">
+								<td>
+									<div class="rc-table-wrapper">
+										<div class="rc-table-avatar">{{> avatar username=username}}</div>
+										<div class="rc-table-info">
+											<span class="rc-table-title">
+												{{name}}
+											</span>
+										</div>
+									</div>
+								</td>
+								<td>{{username}}</td>
+								<td>{{createdAt}}</td>
+							</tr>
+						{{else}}
+							{{# with searchText}}
+								<tr class="table-no-click">
+									<td>{{_ "No_results_found_for"}} {{.}}</td>
+								</tr>
+							{{/with}}
+						{{/each}}
+						{{#if isLoading}}
+							<tr class="table-no-click">
+								<td class="table-loading-td" colspan="3">{{> loading}}</td>
+							</tr>
+						{{/if}}
+					</tbody>
+				{{/table}}
+			{{/if}}
 		</div>
-		{{#each roomType in roomTypesAfterStandard}}
-			<div class="room-type-creation">
-				{{> Template.dynamic template=roomType.creationTemplate }}
-			</div>
-		{{/each}}
 	</section>
 </template>

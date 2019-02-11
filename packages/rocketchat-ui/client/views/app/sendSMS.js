@@ -54,6 +54,24 @@ import _ from 'underscore';
 // 	return [...old.replace(' ', '').toLocaleLowerCase()].filter((f) => reg.test(f)).join('');
 // };
 //
+
+Template.sendSMS.helpers({
+	languages() {
+		const languages = TAPi18n.getLanguages();
+
+		const result = Object.entries(languages)
+			.map(([key, language]) => ({ ...language, key: key.toLowerCase() }))
+			.sort((a, b) => a.key - b.key);
+
+		result.unshift({
+			name: 'Default',
+			en: 'Default',
+			key: '',
+		});
+
+		return result;
+	}
+});
 // Template.sendSMS.helpers({
 // 	autocomplete(key) {
 // 		const instance = Template.instance();

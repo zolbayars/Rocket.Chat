@@ -87,6 +87,17 @@ FlowRouter.route('/directory', {
 	}],
 });
 
+FlowRouter.route('/send-sms', {
+	name: 'send-sms',
+
+	action() {
+		BlazeLayout.render('main', { center: 'sendSMS' });
+	},
+	triggersExit: [function() {
+		$('.main-content').addClass('rc-old');
+	}],
+});
+
 FlowRouter.route('/account/:group?', {
 	name: 'account',
 
@@ -177,4 +188,3 @@ FlowRouter.notFound = {
 		BlazeLayout.render('pageNotFound');
 	},
 };
-

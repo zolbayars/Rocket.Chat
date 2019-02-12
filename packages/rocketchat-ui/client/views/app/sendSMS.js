@@ -70,6 +70,12 @@ const numberList = {
 	18132804355: "+18132804355",
 }
 
+Template.createChannel.onCreated(function() {
+	this.fromNumber = new ReactiveVar(Object.keys(numberList)[0]);
+	this.toNumbers = new ReactiveVar(false);
+	this.smsText = new ReactiveVar(false);
+});
+
 Template.sendSMS.helpers({
 	fromNumbers() {
 		const result = Object.entries(numberList)

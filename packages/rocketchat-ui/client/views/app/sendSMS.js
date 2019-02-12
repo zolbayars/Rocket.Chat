@@ -81,6 +81,35 @@ Template.sendSMS.helpers({
 			return `.${ fileConstraints.extensions.join(', .') }`;
 		}
 	},
+	addIsDisabled() {
+		return (Template.instance().toNumbers.get().length >= 8 &&
+			Template.instance().smsText.get() != '') ? '' : 'disabled';
+	},
+});
+
+Template.sendSMS.events({
+	'submit .send-sms__content'(e, instance) {
+		e.preventDefault();
+		e.stopPropagation();
+		const fromNumber = instance.fromNumber.get();
+		const toNumbers = instance.toNumbers.get();
+		const toNumbersCSV = instance.toNumbersCSV.get();
+		const smsText = instance.smsText.get();
+
+		if (instance.invalid.get() || instance.inUse.get()) {
+			return e.target.name.focus();
+		}
+
+		const SMSService = RocketChat.SMS.getService(RocketChat.settings.get('SMS_Service'));
+
+		if (!SMSService) {
+			return "You have to configure SMS service on the Admin panel to use this feature";
+		}
+
+		SMSService.send(fromNumber, toNumbers, smsText);
+
+		return false;
+	},
 });
 // Template.sendSMS.helpers({
 // 	autocomplete(key) {

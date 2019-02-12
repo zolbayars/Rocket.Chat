@@ -2,7 +2,7 @@
 	<section class="send-sms-container">
 		{{> header sectionName="Send SMS with Mobex" hideHelp=true fullpage=true}}
 		<div class="rc-table-content">
-
+			<form class="send-sms__content">
 
 				<div class="rc-input">
 					<label class="rc-input__label">
@@ -10,7 +10,7 @@
 						<div class="rc-input__wrapper">
 
 							<div class="rc-select">
-								<select class="input-monitor rc-select__element" name="{{_id}}" {{isDisabled}} {{isReadonly}}>
+								<select class="input-monitor rc-select__element" name="fromNumber" {{isDisabled}} {{isReadonly}}>
 									{{#each fromNumbers}}
 									<option value="{{key}}" dir="auto">{{name}}</option>
 									{{/each}}
@@ -28,7 +28,7 @@
 							<div class="rc-input__icon">
 								{{> icon block="rc-input__icon-svg" icon="message" }}
 							</div>
-							<input name="name" type="text" class="rc-input__element"
+							<input name="toNumbers" type="text" class="rc-input__element"
 									 placeholder="{{_ "Send_sms_with_mobex_to_number_placeholder"}}" autofocus>
 						</div>
 					</label>
@@ -51,7 +51,7 @@
 								<div class="preview no-file background-transparent-light secondary-font-color"><i class="icon-upload"></i></div>
 								<div class="action">
 									<div class="rc-button rc-button--primary">{{_ 'Select_file'}}
-										<input type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
+										<input type="file" name="toNumbersCSV" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
 									</div>
 								</div>
 							</div>
@@ -64,7 +64,7 @@
 					<label class="rc-input__label">
 						<div class="rc-input__title">{{_ "Send_sms_with_mobex_text"}}</div>
 						<div class="rc-input__wrapper">
-							<textarea class="input-monitor rc-input__element" name="{{_id}}" rows="4" style="height: auto" {{isDisabled}} {{isReadonly}}>{{value}}</textarea>
+							<textarea class="input-monitor rc-input__element" name="smsText" rows="4" style="height: auto" {{isDisabled}} {{isReadonly}}>{{value}}</textarea>
 						</div>
 					</label>
 					<div class="rc-input__description">{{_ "Send_sms_with_mobex_text_description"}}</div>
@@ -80,7 +80,7 @@
 					</select>
 					{{> icon block="rc-select__arrow" icon="arrow-down" }}
 				</div> -->
-
+				</form>
 		</div>
 	</section>
 </template>

@@ -68,18 +68,32 @@ class Jasmin {
 		console.log('Jasmin send password', this.password);
 		console.log('Jasmin send from', this.from);
 
-		const strippedTo = toNumber.replace(/\D/g, '');
+		let currentFrom = this.from;
+		if(fromNumber){
+			currentFrom = fromNumber;
+		}
 
+		const strippedTo = toNumber.replace(/\D/g, '');
+		let result = {
+			'isSuccess': false,
+			'resultMsg': "An unknown error happened"
+		}
 		try {
-			const response = HTTP.call('GET', `${ this.address }/send?username=${ this.username }&password=${ this.password }&to=${ strippedTo }&from=${ this.from }&content=${ message }`);
+			const response = HTTP.call('GET', `${ this.address }/send?username=${ this.username }&password=${ this.password }&to=${ strippedTo }&from=${ currentFrom }&content=${ message }`);
 			if (response.statusCode === 200) {
 				console.log('SMS Jasmin response: ', response.content);
+				result['resultMsg'] = 'Sent SMS with Mobex. ID: ' + response.content;
+				result['isSuccess'] = true;
 			} else {
+				result['resultMsg'] = 'Could not able to send SMS. Code: ' + response.statusCode;
 				console.log('SMS Jasmin response: ', response.statusCode);
 			}
 		} catch (e) {
-			console.error('Error while sending SMS with Jasmin', e);
+			result['resultMsg'] = 'Error while sending SMS with Mobex. Detail: ' + e;
+			console.error('Error while sending SMS with Mobex', e);
 		}
+
+		return result; 
 
 	}
 	response(/* message */) {

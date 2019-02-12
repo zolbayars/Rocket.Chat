@@ -93,17 +93,14 @@ Template.sendSMS.helpers({
 Template.sendSMS.events({
 	'change [name="fromNumber"]'(e, t) {
 		t.fromNumber.set(e.target.value);
-		t.change();
 	},
 	'change [name="toNumbers"]'(e, t) {
 		console.log("t", t);
 		console.log("e", e);
 		t.toNumbers.set(e.target.value);
-		t.change();
 	},
 	'change [name="smsText"]'(e, t) {
 		t.smsText.set(e.target.value);
-		t.change();
 	},
 	'submit .send-sms__content'(e, instance) {
 		e.preventDefault();
@@ -121,11 +118,13 @@ Template.sendSMS.events({
 
 		Meteor.call('sendSingleSMS', fromNumber, toNumbers, smsText, (err, smsResult) => {
 
-			console.log("Success!");
-
-			toastr.info(TAPi18n.__('Chatpal_created_key_successfully'));
-			//
-			// t.apiKey.set(key);
+			if(!err){
+				console.log("Success!");
+				toastr.success(TAPi18n.__('Send_sms_with_mobex_success'));
+			}else{
+				toastr.error(TAPi18n.__('Send_sms_with_mobex_error'));
+			}
+			
 		});
 
 		return false;

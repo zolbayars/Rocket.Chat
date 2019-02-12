@@ -87,11 +87,11 @@ Template.sendSMS.events({
 	'submit .send-sms__content'(e, instance) {
 		e.preventDefault();
 		e.stopPropagation();
-		console.log("instance", instance);
-		const toNumbers = instance.toNumbers.get();
-		const fromNumber = instance.fromNumber.get();
-		const toNumbersCSV = instance.toNumbersCSV.get();
-		const smsText = instance.smsText.get();
+		console.log("event", e);
+		const toNumbers = e.target.toNumbers.value;
+		const fromNumber = e.target.fromNumber.value;
+		const toNumbersCSV = e.target.toNumbersCSV.value;
+		const smsText = e.target.smsText.value;
 
 		if (instance.invalid.get() || instance.inUse.get()) {
 			return e.target.name.focus();

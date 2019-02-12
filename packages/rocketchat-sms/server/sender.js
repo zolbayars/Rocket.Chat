@@ -13,7 +13,7 @@ Meteor.methods({
     	}
 
     	const result = SMSService.send(from, to, smsText);
-      console.log(result);
+      console.log("sendSingleSMS result", result);
       return result;
 	},
 	// 'chatpalUtilsGetTaC'(lang) {

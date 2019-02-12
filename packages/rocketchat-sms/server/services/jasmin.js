@@ -72,6 +72,7 @@ class Jasmin {
 		if(fromNumber){
 			currentFrom = fromNumber;
 		}
+		console.log('Jasmin send currentFrom', currentFrom);
 
 		const strippedTo = toNumber.replace(/\D/g, '');
 		let result = {
@@ -93,7 +94,7 @@ class Jasmin {
 			console.error('Error while sending SMS with Mobex', e);
 		}
 
-		return result; 
+		return result;
 
 	}
 	response(/* message */) {

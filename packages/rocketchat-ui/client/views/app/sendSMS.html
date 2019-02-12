@@ -34,7 +34,7 @@
 									 placeholder="{{_ "Send_sms_with_mobex_to_number_placeholder"}}" autofocus>
 						</div>
 					</label>
-					<div class="rc-input__description">{{_ "Send_sms_with_mobex_text_description"}}</div>
+					<div class="rc-input__description">{{_ "Send_sms_with_mobex_to_number_description"}}</div>
 					{{#if inUse}}
 						<div class="rc-input__error">
 							<div class="rc-input__error-icon">
@@ -43,6 +43,21 @@
 							<div class="rc-input__error-message">{{_ "Channel_already_exist_static"}}</div>
 						</div>
 					{{/if}}
+				</div>
+
+				<div class="rc-input">
+					<label class="rc-input__label">
+						<div class="rc-input__title">{{_ "Send_sms_with_mobex_to_number_csv"}}</div>
+						<div class="settings-file-preview">
+							<div class="preview no-file background-transparent-light secondary-font-color"><i class="icon-upload"></i></div>
+							<div class="action">
+								<div class="rc-button rc-button--primary">{{_ 'Select_file'}}
+									<input type="file" accept="{{assetAccept fileConstraints}}" />
+								</div>
+							</div>
+						</div>
+					</label>
+					<div class="rc-input__description">{{_ "Send_sms_with_mobex_to_number_csv_description"}}</div>
 				</div>
 
 				<div class="rc-input">

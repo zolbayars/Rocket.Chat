@@ -80,11 +80,7 @@ Template.sendSMS.helpers({
 		if (fileConstraints.extensions && fileConstraints.extensions.length) {
 			return `.${ fileConstraints.extensions.join(', .') }`;
 		}
-	},
-	addIsDisabled() {
-		return (Template.instance().toNumbers.get().length >= 8 &&
-			Template.instance().smsText.get() != '') ? '' : 'disabled';
-	},
+	}
 });
 
 Template.sendSMS.events({

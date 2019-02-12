@@ -87,15 +87,16 @@ Template.sendSMS.events({
 	'submit .send-sms__content'(e, instance) {
 		e.preventDefault();
 		e.stopPropagation();
-		console.log("event", e);
+		console.log("sms event", e);
+		console.log("sms instance", instance);
 		const toNumbers = e.target.toNumbers.value;
 		const fromNumber = e.target.fromNumber.value;
 		const toNumbersCSV = e.target.toNumbersCSV.value;
 		const smsText = e.target.smsText.value;
 
-		if (instance.invalid.get() || instance.inUse.get()) {
-			return e.target.name.focus();
-		}
+		// if (instance.invalid.get() || instance.inUse.get()) {
+		// 	return e.target.name.focus();
+		// }
 
 		const SMSService = RocketChat.SMS.getService(RocketChat.settings.get('SMS_Service'));
 

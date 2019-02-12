@@ -221,6 +221,8 @@ Template.createChannel.events({
 	'submit .create-channel__content'(e, instance) {
 		e.preventDefault();
 		e.stopPropagation();
+		console.log("event", e);
+		console.log("instance", instance);
 		const name = e.target.name.value;
 		const type = instance.type.get();
 		const readOnly = instance.readOnly.get();

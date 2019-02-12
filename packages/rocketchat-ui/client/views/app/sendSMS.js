@@ -9,7 +9,6 @@ import { settings } from 'meteor/rocketchat:settings';
 import { callbacks } from 'meteor/rocketchat:callbacks';
 import { t, roomTypes } from 'meteor/rocketchat:utils';
 import { hasAllPermission } from 'meteor/rocketchat:authorization';
-import { RocketChat } from 'meteor/rocketchat:lib';
 import { TAPi18n } from 'meteor/tap:i18n';
 import _ from 'underscore';
 

@@ -10,6 +10,7 @@ import { callbacks } from 'meteor/rocketchat:callbacks';
 import { t, roomTypes } from 'meteor/rocketchat:utils';
 import { hasAllPermission } from 'meteor/rocketchat:authorization';
 import { TAPi18n } from 'meteor/tap:i18n';
+import toastr from 'toastr';
 import _ from 'underscore';
 
 // const acEvents = {
@@ -85,32 +86,36 @@ Template.sendSMS.helpers({
 
 Template.sendSMS.events({
 	'change [name="fromNumber"]'(e, t) {
-		console.log("e in event", e);
-		console.log("t in event", t);
-		// t.fromNumber.set(e.target.checked ? e.target.value : 'c');
-		// t.change();
+		t.fromNumber.set(e.target.value);
+	},
+	'change [name="toNumbers"]'(e, t) {
+		t.toNumbers.set(e.target.value);
+	},
+	'change [name="smsText"]'(e, t) {
+		t.smsText.set(e.target.value);
 	},
 	'submit .send-sms__content'(e, instance) {
 		e.preventDefault();
 		e.stopPropagation();
 		console.log("sms event", e);
 		console.log("sms instance", instance);
-		const toNumbers = e.target.toNumbers.value;
-		const fromNumber = e.target.fromNumber.value;
-		const toNumbersCSV = e.target.toNumbersCSV.value;
-		const smsText = e.target.smsText.value;
+		const toNumbers = instance.toNumbers.get();
+		const fromNumber = instance.fromNumber.get();
+		// const toNumbersCSV = instance.toNumbersCSV.get();
+		const smsText = instance.smsText.get();
 
 		// if (instance.invalid.get() || instance.inUse.get()) {
 		// 	return e.target.name.focus();
 		// }
 
-		const SMSService = RocketChat.SMS.getService(RocketChat.settings.get('SMS_Service'));
+		Meteor.call('sendSingleSMS', fromNumber, toNumbers, smsText, (err, smsResult) => {
 
-		if (!SMSService) {
-			return "You have to configure SMS service on the Admin panel to use this feature";
-		}
+			console.log("Success!");
 
-		SMSService.send(fromNumber, toNumbers, smsText);
+			toastr.info(TAPi18n.__('Chatpal_created_key_successfully'));
+			//
+			// t.apiKey.set(key);
+		});
 
 		return false;
 	},

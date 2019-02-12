@@ -93,12 +93,17 @@ Template.sendSMS.helpers({
 Template.sendSMS.events({
 	'change [name="fromNumber"]'(e, t) {
 		t.fromNumber.set(e.target.value);
+		t.change();
 	},
 	'change [name="toNumbers"]'(e, t) {
+		console.log("t", t);
+		console.log("e", e);
 		t.toNumbers.set(e.target.value);
+		t.change();
 	},
 	'change [name="smsText"]'(e, t) {
 		t.smsText.set(e.target.value);
+		t.change();
 	},
 	'submit .send-sms__content'(e, instance) {
 		e.preventDefault();

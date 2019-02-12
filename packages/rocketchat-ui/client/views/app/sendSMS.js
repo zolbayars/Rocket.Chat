@@ -59,6 +59,7 @@ import _ from 'underscore';
 
 const numberList = {
 	18139900996: "+18139900996",
+	14439370949: "+14439370949",
 	18139990990: "+18139990990",
 	17272708181: "+17272708181",
 	12129181876: "+12129181876",
@@ -124,7 +125,7 @@ Template.sendSMS.events({
 			}else{
 				toastr.error(TAPi18n.__('Send_sms_with_mobex_error'));
 			}
-			
+
 		});
 
 		return false;

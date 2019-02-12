@@ -34,6 +34,7 @@
 									 placeholder="{{_ "Send_sms_with_mobex_to_number_placeholder"}}" autofocus>
 						</div>
 					</label>
+					<div class="rc-input__description">{{_ "Send_sms_with_mobex_text_description"}}</div>
 					{{#if inUse}}
 						<div class="rc-input__error">
 							<div class="rc-input__error-icon">
@@ -44,7 +45,17 @@
 					{{/if}}
 				</div>
 
+				<div class="rc-input">
+					<label class="rc-input__label">
+						<div class="rc-input__title">{{_ "Send_sms_with_mobex_text"}}</div>
+						<div class="rc-input__wrapper">
+							<textarea class="input-monitor rc-input__element" name="{{_id}}" rows="4" style="height: auto" {{isDisabled}} {{isReadonly}}>{{value}}</textarea>
+						</div>
+					</label>
+					<div class="rc-input__description">{{_ "Send_sms_with_mobex_text_description"}}</div>
+				</div>
 
+				<input class="rc-button rc-button--primary rc-button--full" type="submit" data-button="add" {{addIsDisabled}} value="{{_ "Send"}}">
 
 				<!-- <div class="rc-select">
 					<select class="input-monitor rc-select__element" name="{{_id}}" {{isDisabled}} {{isReadonly}}>

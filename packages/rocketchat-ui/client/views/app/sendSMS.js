@@ -78,7 +78,7 @@ Template.sendSMS.helpers({
 	},
 	assetAccept() {
 		if (fileConstraints.extensions && fileConstraints.extensions.length) {
-			return `.${ fileConstraints.extensions.join(', .') + }`;
+			return `.${ fileConstraints.extensions.join(', .') }`;
 		}
 	},
 });

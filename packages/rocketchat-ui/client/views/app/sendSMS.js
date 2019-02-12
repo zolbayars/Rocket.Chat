@@ -76,6 +76,11 @@ Template.sendSMS.helpers({
 
 		return result;
 	},
+	assetAccept() {
+		if (fileConstraints.extensions && fileConstraints.extensions.length) {
+			return `.${ fileConstraints.extensions.join(', .') + }`;
+		}
+	},
 });
 // Template.sendSMS.helpers({
 // 	autocomplete(key) {

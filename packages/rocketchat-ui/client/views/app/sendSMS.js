@@ -145,7 +145,7 @@ Template.sendSMS.events({
 		if(toNumbers.indexOf(',') > -1){
 			const toNumbersArr = toNumbers.split(',');
 
-			Meteor.call('sendBatchSMS', fromNumber, toNumbers, smsText, (err, smsResult) => {
+			Meteor.call('sendBatchSMS', fromNumber, toNumbersArr, smsText, (err, smsResult) => {
 
 				if(!err){
 					if(smsResult['isSuccess']){

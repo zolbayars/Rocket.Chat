@@ -119,11 +119,18 @@ class Mobex {
 			'isSuccess': false,
 			'resultMsg': "An unknown error happened"
 		}
+
+		let userPass = this.username + ':' + this.password;
+		console.log("Username and password: " + userPass);
+
+		let authToken = Base64.encode(userPass);
+		console.log("authToken: " + authToken);
+
 		try {
 			const response = HTTP.call('POST', `${ this.restAddress }/secure/sendbatch`,
 				{
 					headers: {
-						'Authorization': Base64.encode(this.username + ':' + this.password)
+						'Authorization': authToken
 					},
 					data: {
 						"messages": [

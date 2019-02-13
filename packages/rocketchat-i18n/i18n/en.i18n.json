@@ -2498,7 +2498,7 @@
   "Send_sms_with_mobex_from": "From",
   "Send_sms_with_mobex_success": "SMS sent successfully.",
   "Send_sms_with_mobex_text": "Message",
-  "Send_sms_with_mobex_text_description": "Messages may be longer than 160 characters but will count as more than one message for billing purposes",
+  "Send_sms_with_mobex_text_description": "(Messages may be longer than 160 characters but will count as more than one message for billing purposes)",
   "Send_sms_with_mobex_to_number": "Send to",
   "Send_sms_with_mobex_to_number_description": "Enter a single number or multiple numbers separated by comma",
   "Send_sms_with_mobex_to_number_csv": "Or upload csv file with numbers",

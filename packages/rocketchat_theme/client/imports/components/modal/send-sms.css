@@ -4,7 +4,7 @@
 
 	height: 100vh;
 
-	padding: 0 1.5rem;
+	padding: 0 10rem;
 
 	&-search {
 		width: 100%;
@@ -16,6 +16,10 @@
 
 	&-topic {
 		color: var(--rc-color-primary-light);
+	}
+
+	& .rc-input {
+		margin-bottom: 2.5rem;
 	}
 }
 

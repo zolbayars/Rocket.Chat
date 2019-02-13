@@ -105,6 +105,7 @@ Template.sendSMS.events({
 	},
 	'change [name="smsText"]'(e, t) {
 		t.smsText.set(e.target.value);
+		document.activeElement === input && e && /input/i.test(e.type) && (input.selectionEnd = position + input.value.length - length);
 	},
 	'submit .send-sms__content'(e, instance) {
 		e.preventDefault();

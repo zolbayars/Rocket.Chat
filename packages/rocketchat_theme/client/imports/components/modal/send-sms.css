@@ -27,7 +27,7 @@
 		color: var(--button-primary-text-color);
 	}
 
-	& header .rc-header .rc-header--fullpage {
+	& .rc-header--fullpage {
 		padding-left: 0 !important;
 	}
 }

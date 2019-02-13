@@ -121,16 +121,14 @@ class Mobex {
 		}
 
 		let userPass = this.username + ':' + this.password;
-		console.log("Username and password: " + userPass);
 
 		let authToken = Base64.encode(userPass);
-		console.log("authToken: " + authToken);
 
 		try {
 			const response = HTTP.call('POST', `${ this.restAddress }/secure/sendbatch`,
 				{
 					headers: {
-						'Authorization': authToken
+						'Authorization': 'Basic ' + authToken
 					},
 					data: {
 						"messages": [

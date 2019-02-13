@@ -72,7 +72,7 @@ const numberList = {
 }
 
 const validatePhoneNum = (numbers) => {
-	const reg = new RegExp(`^(\d{7,15},*\s*)+$`);
+	const reg = new RegExp(`^[0-9]{7,15}(,[0-9]{7,15})*$`);
 	return reg.test(numbers);
 };
 

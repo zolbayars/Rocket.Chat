@@ -71,6 +71,11 @@ const numberList = {
 	18132804355: "+18132804355",
 }
 
+const validatePhoneNum = (numbers) => {
+	const reg = new RegExp(`^(\d{7,15},*\s*)+$`);
+	return reg.test(numbers);
+};
+
 Template.sendSMS.onCreated(function() {
 	this.fromNumber = new ReactiveVar(Object.keys(numberList)[0]);
 	this.toNumbers = new ReactiveVar(false);
@@ -96,8 +101,6 @@ Template.sendSMS.events({
 		t.fromNumber.set(e.target.value);
 	},
 	'change [name="toNumbers"]'(e, t) {
-		console.log("t", t);
-		console.log("e", e);
 		t.toNumbers.set(e.target.value);
 	},
 	'change [name="smsText"]'(e, t) {
@@ -106,12 +109,20 @@ Template.sendSMS.events({
 	'submit .send-sms__content'(e, instance) {
 		e.preventDefault();
 		e.stopPropagation();
-		console.log("sms event", e);
-		console.log("sms instance", instance);
 		const toNumbers = instance.toNumbers.get();
 		const fromNumber = instance.fromNumber.get();
 		// const toNumbersCSV = instance.toNumbersCSV.get();
 		const smsText = instance.smsText.get();
+
+		if(!validatePhoneNum(toNumbers)){
+			toastr.warning(TAPi18n.__('Send_sms_with_mobex_error_to_num'));
+			return false;
+		}
+
+		if(!smsText || smsText == '' || smsText.length == 0){
+			toastr.warning(TAPi18n.__('Send_sms_with_mobex_error_text'));
+			return false;
+		}
 
 		// if (instance.invalid.get() || instance.inUse.get()) {
 		// 	return e.target.name.focus();

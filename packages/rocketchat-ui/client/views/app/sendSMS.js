@@ -10,6 +10,7 @@ import { callbacks } from 'meteor/rocketchat:callbacks';
 import { t, roomTypes } from 'meteor/rocketchat:utils';
 import { hasAllPermission } from 'meteor/rocketchat:authorization';
 import { TAPi18n } from 'meteor/tap:i18n';
+import { Session } from 'meteor/session'
 import toastr from 'toastr';
 import _ from 'underscore';
 
@@ -80,6 +81,8 @@ Template.sendSMS.onCreated(function() {
 	this.fromNumber = new ReactiveVar(Object.keys(numberList)[0]);
 	this.toNumbers = new ReactiveVar(false);
 	this.smsText = new ReactiveVar(false);
+
+	Session.set("smsLength", 0);
 });
 
 Template.sendSMS.helpers({
@@ -93,7 +96,10 @@ Template.sendSMS.helpers({
 		if (fileConstraints.extensions && fileConstraints.extensions.length) {
 			return `.${ fileConstraints.extensions.join(', .') }`;
 		}
-	}
+	},
+	smsLength() {
+    return Session.get('smsLength');
+  }
 });
 
 Template.sendSMS.events({
@@ -103,8 +109,10 @@ Template.sendSMS.events({
 	'change [name="toNumbers"]'(e, t) {
 		t.toNumbers.set(e.target.value);
 	},
-	'change [name="smsText"]'(e, t) {
-		t.smsText.set(e.target.value);
+	'input [name="smsText"]'(e, t) {
+		const input = e.target;
+		t.smsText.set(input.value);
+		Session.set("smsLength", event.currentTarget.value.length);
 		document.activeElement === input && e && /input/i.test(e.type) && (input.selectionEnd = position + input.value.length - length);
 	},
 	'submit .send-sms__content'(e, instance) {

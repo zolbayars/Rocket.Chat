@@ -1,5 +1,6 @@
 import { RocketChat } from 'meteor/rocketchat:lib';
 import { HTTP } from 'meteor/http';
+import { Base64 } from 'meteor/base64';
 
 class Mobex {
 	constructor() {
@@ -121,6 +122,9 @@ class Mobex {
 		try {
 			const response = HTTP.call('POST', `${ this.restAddress }/secure/sendbatch`,
 				{
+					headers: {
+						'Authorization': Base64.encode(this.username + ':' + this.password);
+					},
 					data: {
 						"messages": [
 							{
@@ -134,7 +138,7 @@ class Mobex {
 				callBack
 			);
 
-			
+
 		} catch (e) {
 			result['resultMsg'] = 'Error while sending SMS with Mobex. Detail: ' + e;
 			console.error('Error while sending SMS with Mobex', e);

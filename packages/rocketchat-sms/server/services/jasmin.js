@@ -83,7 +83,7 @@ class Jasmin {
 			const response = HTTP.call('GET', `${ this.address }/send?username=${ this.username }&password=${ this.password }&to=${ strippedTo }&from=${ currentFrom }&content=${ message }`);
 			if (response.statusCode === 200) {
 				console.log('SMS Jasmin response: ', response.content);
-				result['resultMsg'] = 'Sent SMS with Mobex. ID: ' + response.content;
+				result['resultMsg'] = response.content;
 				result['isSuccess'] = true;
 			} else {
 				result['resultMsg'] = 'Could not able to send SMS. Code: ' + response.statusCode;

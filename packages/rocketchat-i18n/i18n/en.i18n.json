@@ -2490,7 +2490,7 @@
   "Send_request_on_offline_messages": "Send Request on Offline Messages",
   "Send_request_on_visitor_message": "Send Request on Visitor Messages",
   "Send_sms_with_mobex": "Send SMS with Mobex",
-  "Send_sms_with_mobex_success": "SMS sent successfully",
+  "Send_sms_with_mobex_success": "SMS sent successfully.",
   "Send_sms_with_mobex_error": "An error occured while sending SMS",
   "Send_sms_with_mobex_description": "Select a number and send sms to anyone",
   "Send_sms_with_mobex_from": "From",

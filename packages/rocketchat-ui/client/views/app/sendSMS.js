@@ -120,8 +120,12 @@ Template.sendSMS.events({
 		Meteor.call('sendSingleSMS', fromNumber, toNumbers, smsText, (err, smsResult) => {
 
 			if(!err){
-				console.log("Success!");
-				toastr.success(TAPi18n.__('Send_sms_with_mobex_success'));
+				if(smsResult['isSuccess']){
+					toastr.success(TAPi18n.__('Send_sms_with_mobex_success') + " " + smsResult['resultMsg']);
+				}else{
+					toastr.error(smsResult['resultMsg']);
+				}
+
 			}else{
 				toastr.error(TAPi18n.__('Send_sms_with_mobex_error'));
 			}

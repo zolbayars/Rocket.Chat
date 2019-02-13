@@ -21,6 +21,11 @@
 	& .rc-input {
 		margin-bottom: 2.5rem;
 	}
+
+	& .rc-input input[type="submit"] {
+		background: var(--button-primary-background);
+		color: var(--button-primary-text-color);
+	}
 }
 
 .send-sms-file-preview {

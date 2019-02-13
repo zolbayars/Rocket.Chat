@@ -112,7 +112,7 @@ Template.sendSMS.events({
 	'input [name="smsText"]'(e, t) {
 		const input = e.target;
 		t.smsText.set(input.value);
-		Session.set("smsLength", event.currentTarget.value.length);
+		Session.set("smsLength", input.value.length);
 		document.activeElement === input && e && /input/i.test(e.type) && (input.selectionEnd = position + input.value.length - length);
 	},
 	'submit .send-sms__content'(e, instance) {

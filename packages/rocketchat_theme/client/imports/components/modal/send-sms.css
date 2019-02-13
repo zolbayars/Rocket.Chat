@@ -26,6 +26,10 @@
 		background: var(--button-primary-background);
 		color: var(--button-primary-text-color);
 	}
+
+	& header .rc-header .rc-header--fullpage {
+		padding-left: 0;
+	}
 }
 
 .send-sms-file-preview {

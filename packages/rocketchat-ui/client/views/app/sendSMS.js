@@ -80,6 +80,7 @@ const validatePhoneNum = (numbers) => {
 Template.sendSMS.onCreated(function() {
 	this.fromNumber = new ReactiveVar(Object.keys(numberList)[0]);
 	this.toNumbers = new ReactiveVar(false);
+	this.toNumbersCSV = new ReactiveVar(false);
 	this.smsText = new ReactiveVar(false);
 
 	Session.set("smsLength", 0);
@@ -113,7 +114,11 @@ Template.sendSMS.events({
 		const input = e.target;
 		t.smsText.set(input.value);
 		Session.set("smsLength", input.value.length);
-		document.activeElement === input && e && /input/i.test(e.type) && (input.selectionEnd = position + input.value.length - length);
+	},
+	'input [name="toNumbersCSV"]'(e, t) {
+		const input = e.target;
+		console.log("file input", input);
+		// t.toNumbersCSV.set(input.value);
 	},
 	'submit .send-sms__content'(e, instance) {
 		e.preventDefault();
@@ -137,20 +142,39 @@ Template.sendSMS.events({
 		// 	return e.target.name.focus();
 		// }
 
-		Meteor.call('sendSingleSMS', fromNumber, toNumbers, smsText, (err, smsResult) => {
+		if(toNumbers.indexOf(',') > -1){
+			const toNumbersArr = toNumbers.split(',');
 
-			if(!err){
-				if(smsResult['isSuccess']){
-					toastr.success(TAPi18n.__('Send_sms_with_mobex_success') + " " + smsResult['resultMsg']);
+			Meteor.call('sendBatchSMS', fromNumber, toNumbers, smsText, (err, smsResult) => {
+
+				if(!err){
+					if(smsResult['isSuccess']){
+						toastr.success(TAPi18n.__('Send_sms_with_mobex_success') + " " + smsResult['data']['data']['messageCount'] + " message sent.");
+					}else{
+						toastr.error(smsResult['resultMsg']);
+					}
+
 				}else{
-					toastr.error(smsResult['resultMsg']);
+					toastr.error(TAPi18n.__('Send_sms_with_mobex_error'));
 				}
 
-			}else{
-				toastr.error(TAPi18n.__('Send_sms_with_mobex_error'));
-			}
+			});
+		}else{
+			Meteor.call('sendSingleSMS', fromNumber, toNumbers, smsText, (err, smsResult) => {
 
-		});
+				if(!err){
+					if(smsResult['isSuccess']){
+						toastr.success(TAPi18n.__('Send_sms_with_mobex_success') + " " + smsResult['resultMsg']);
+					}else{
+						toastr.error(smsResult['resultMsg']);
+					}
+
+				}else{
+					toastr.error(TAPi18n.__('Send_sms_with_mobex_error'));
+				}
+
+			});
+		}
 
 		return false;
 	},

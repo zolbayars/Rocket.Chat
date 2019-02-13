@@ -14,8 +14,8 @@ Meteor.startup(function() {
 				key: 'twilio',
 				i18nLabel: 'Twilio',
 			}, {
-				key: 'jasmin',
-				i18nLabel: 'Jasmin',
+				key: 'mobex',
+				i18nLabel: 'Mobex',
 			}],
 			i18nLabel: 'Service',
 		});
@@ -39,40 +39,49 @@ Meteor.startup(function() {
 			});
 		});
 
-		this.section('Jasmin', function() {
-			this.add('SMS_Jasmin_gateway_address', '', {
+		this.section('Mobex', function() {
+			this.add('SMS_Mobex_gateway_address', '', {
 				type: 'string',
 				enableQuery: {
 					_id: 'SMS_Service',
-					value: 'jasmin',
+					value: 'mobex',
 				},
-				i18nLabel: 'Jasmin_sms_gateway_address',
-				i18nDescription: 'Jasmin_sms_gateway_address_desc',
+				i18nLabel: 'Mobex_sms_gateway_address',
+				i18nDescription: 'Mobex_sms_gateway_address_desc',
 			});
-			this.add('SMS_Jasmin_username', '', {
+			this.add('SMS_Mobex_restful_address', '', {
 				type: 'string',
 				enableQuery: {
 					_id: 'SMS_Service',
-					value: 'jasmin',
+					value: 'mobex',
 				},
-				i18nLabel: 'Jasmin_sms_gateway_username',
+				i18nLabel: 'Mobex_sms_gateway_restful_address',
+				i18nDescription: 'Mobex_sms_gateway_restful_address_desc',
 			});
-			this.add('SMS_Jasmin_password', '', {
+			this.add('SMS_Mobex_username', '', {
 				type: 'string',
 				enableQuery: {
 					_id: 'SMS_Service',
-					value: 'jasmin',
+					value: 'mobex',
 				},
-				i18nLabel: 'Jasmin_sms_gateway_password',
+				i18nLabel: 'Mobex_sms_gateway_username',
 			});
-			this.add('SMS_Jasmin_from_number', '', {
+			this.add('SMS_Mobex_password', '', {
+				type: 'string',
+				enableQuery: {
+					_id: 'SMS_Service',
+					value: 'mobex',
+				},
+				i18nLabel: 'Mobex_sms_gateway_password',
+			});
+			this.add('SMS_Mobex_from_number', '', {
 				type: 'int',
 				enableQuery: {
 					_id: 'SMS_Service',
-					value: 'jasmin',
+					value: 'mobex',
 				},
-				i18nLabel: 'Jasmin_sms_gateway_from_number',
-				i18nDescription: 'Jasmin_sms_gateway_from_number_desc',
+				i18nLabel: 'Mobex_sms_gateway_from_number',
+				i18nDescription: 'Mobex_sms_gateway_from_number_desc',
 			});
 		});
 

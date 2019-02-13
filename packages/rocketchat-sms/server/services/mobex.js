@@ -123,7 +123,7 @@ class Mobex {
 			const response = HTTP.call('POST', `${ this.restAddress }/secure/sendbatch`,
 				{
 					headers: {
-						'Authorization': Base64.encode(this.username + ':' + this.password);
+						'Authorization': Base64.encode(this.username + ':' + this.password)
 					},
 					data: {
 						"messages": [

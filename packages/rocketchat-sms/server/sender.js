@@ -29,7 +29,7 @@ Meteor.methods({
 			let result = {
 				'isSuccess': false,
 				'resultMsg': "An unknown error happened",
-				'data': null;
+				'data': null
 			}
 
     	SMSService.sendBatch(from, to, smsText, (error, res) => {

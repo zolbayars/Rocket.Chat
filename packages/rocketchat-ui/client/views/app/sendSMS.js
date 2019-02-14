@@ -76,6 +76,15 @@ const validatePhoneNum = (numbers) => {
 	return reg.test(numbers);
 };
 
+readFile = function(f,onLoadCallback) {
+ var reader = new FileReader();
+ reader.onload = function (e){
+  var contents=e.target.result
+  onLoadCallback(contents);
+ }
+ reader.readAsText(f);
+};
+
 Template.sendSMS.onCreated(function() {
 	this.fromNumber = new ReactiveVar(Object.keys(numberList)[0]);
 	this.toNumbers = new ReactiveVar(false);
@@ -106,6 +115,15 @@ Template.sendSMS.events({
 	'change [name="smsText"]'(e, t) {
 		t.smsText.set(e.target.value);
 		document.activeElement === input && e && /input/i.test(e.type) && (input.selectionEnd = position + input.value.length - length);
+	},
+	'input [name="toNumbersCSV"]'(e, t) {
+		console.log("file e", e);
+		console.log("file t", t);
+		const file = e.target.value;
+
+		readFile(f, function(content) {
+    	console.log("file content", content);
+   	});
 	},
 	'submit .send-sms__content'(e, instance) {
 		e.preventDefault();
@@ -147,6 +165,9 @@ Template.sendSMS.events({
 		return false;
 	},
 });
+
+
+
 // Template.sendSMS.helpers({
 // 	autocomplete(key) {
 // 		const instance = Template.instance();

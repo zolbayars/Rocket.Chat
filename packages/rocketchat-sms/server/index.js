@@ -1,5 +1,5 @@
 import './settings';
 import './SMS';
 import './services/twilio';
-import './services/jasmin';
+import './services/mobex';
 import './sender';

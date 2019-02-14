@@ -10,6 +10,7 @@ import { callbacks } from 'meteor/rocketchat:callbacks';
 import { t, roomTypes } from 'meteor/rocketchat:utils';
 import { hasAllPermission } from 'meteor/rocketchat:authorization';
 import { TAPi18n } from 'meteor/tap:i18n';
+import { Session } from 'meteor/session'
 import toastr from 'toastr';
 import _ from 'underscore';
 
@@ -88,7 +89,10 @@ readFile = function(f,onLoadCallback) {
 Template.sendSMS.onCreated(function() {
 	this.fromNumber = new ReactiveVar(Object.keys(numberList)[0]);
 	this.toNumbers = new ReactiveVar(false);
+	this.toNumbersCSV = new ReactiveVar(false);
 	this.smsText = new ReactiveVar(false);
+
+	Session.set("smsLength", 0);
 });
 
 Template.sendSMS.helpers({
@@ -102,7 +106,10 @@ Template.sendSMS.helpers({
 		if (fileConstraints.extensions && fileConstraints.extensions.length) {
 			return `.${ fileConstraints.extensions.join(', .') }`;
 		}
-	}
+	},
+	smsLength() {
+    return Session.get('smsLength');
+  }
 });
 
 Template.sendSMS.events({
@@ -112,9 +119,15 @@ Template.sendSMS.events({
 	'change [name="toNumbers"]'(e, t) {
 		t.toNumbers.set(e.target.value);
 	},
-	'change [name="smsText"]'(e, t) {
-		t.smsText.set(e.target.value);
-		document.activeElement === input && e && /input/i.test(e.type) && (input.selectionEnd = position + input.value.length - length);
+	'input [name="smsText"]'(e, t) {
+		const input = e.target;
+		t.smsText.set(input.value);
+		Session.set("smsLength", input.value.length);
+	},
+	'input [name="toNumbersCSV"]'(e, t) {
+		const input = e.target;
+		console.log("file input", input.files);
+		// t.toNumbersCSV.set(input.value);
 	},
 	'input [name="toNumbersCSV"]'(e, t) {
 		console.log("file e", e);
@@ -147,20 +160,39 @@ Template.sendSMS.events({
 		// 	return e.target.name.focus();
 		// }
 
-		Meteor.call('sendSingleSMS', fromNumber, toNumbers, smsText, (err, smsResult) => {
+		if(toNumbers.indexOf(',') > -1){
+			const toNumbersArr = toNumbers.split(',');
 
-			if(!err){
-				if(smsResult['isSuccess']){
-					toastr.success(TAPi18n.__('Send_sms_with_mobex_success') + " " + smsResult['resultMsg']);
+			Meteor.call('sendBatchSMS', fromNumber, toNumbersArr, smsText, (err, smsResult) => {
+
+				if(!err){
+					if(smsResult['isSuccess']){
+						toastr.success(TAPi18n.__('Send_sms_with_mobex_success') + " " + smsResult['data']['data']['messageCount'] + " message sent.");
+					}else{
+						toastr.error(smsResult['resultMsg']);
+					}
+
 				}else{
-					toastr.error(smsResult['resultMsg']);
+					toastr.error(TAPi18n.__('Send_sms_with_mobex_error'));
 				}
 
-			}else{
-				toastr.error(TAPi18n.__('Send_sms_with_mobex_error'));
-			}
+			});
+		}else{
+			Meteor.call('sendSingleSMS', fromNumber, toNumbers, smsText, (err, smsResult) => {
 
-		});
+				if(!err){
+					if(smsResult['isSuccess']){
+						toastr.success(TAPi18n.__('Send_sms_with_mobex_success') + " " + smsResult['resultMsg']);
+					}else{
+						toastr.error(smsResult['resultMsg']);
+					}
+
+				}else{
+					toastr.error(TAPi18n.__('Send_sms_with_mobex_error'));
+				}
+
+			});
+		}
 
 		return false;
 	},

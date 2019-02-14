@@ -1,7 +1,7 @@
 <template name="sendSMS">
 	<section class="send-sms-container">
 		{{> header sectionName="Send SMS with Mobex" hideHelp=true fullpage=true}}
-		<div class="rc-table-content">
+
 			<form class="send-sms__content">
 
 				<div class="rc-input">
@@ -64,10 +64,10 @@
 					<label class="rc-input__label">
 						<div class="rc-input__title">{{_ "Send_sms_with_mobex_text"}}</div>
 						<div class="rc-input__wrapper">
-							<textarea class="input-monitor rc-input__element" name="smsText" rows="4" style="height: auto" {{isDisabled}} {{isReadonly}}>{{value}}</textarea>
+							<textarea class="input-monitor rc-input__element" name="smsText" rows="3" style="height: auto" {{isDisabled}} {{isReadonly}}>{{value}}</textarea>
 						</div>
 					</label>
-					<div class="rc-input__description">{{_ "Send_sms_with_mobex_text_description"}}</div>
+					<div class="rc-input__description">{{_ "Send_sms_with_mobex_char_count"}} <b>{{ smsLength }}</b> {{_ "Send_sms_with_mobex_text_description"}}</div>
 				</div>
 
 				<div class="rc-input">
@@ -77,6 +77,6 @@
 				</div>
 
 				</form>
-		</div>
+
 	</section>
 </template>

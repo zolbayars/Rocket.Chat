@@ -48,10 +48,12 @@ Meteor.methods({
 					result['resultMsg'] = 'Could not able to send SMS. Code: ' + res.statusCode;
 					console.error('SMS Mobex response: ', res.statusCode);
 				}
+
+				callback(error, result);
 			});
 
-      console.log("sendBatchSMS result", result);
-      return result;
+      console.log("sendBatchSMS result. Should not be printed. ", result);
+      // return result;
 	},
 	// 'chatpalUtilsGetTaC'(lang) {
 	// 	try {

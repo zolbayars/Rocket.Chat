@@ -171,7 +171,7 @@ Template.sendSMS.events({
 		// 	return e.target.name.focus();
 		// }
 
-		if(toNumbers.indexOf(',') > -1){
+		if(toNumbers.indexOf(',') > -1 || toNumbersArr.length > 0){
 			if(toNumbersArr.length == 0){
 				toNumbersArr = toNumbers.split(',');
 			}

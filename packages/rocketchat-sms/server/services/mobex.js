@@ -99,7 +99,7 @@ class Mobex {
 		return result;
 
 	}
-	sendBatch(fromNumber, toNumbersArr, message, callBack) {
+	async sendBatch(fromNumber, toNumbersArr, message, callBack) {
 
 		console.log('Mobex send fromNumber', fromNumber);
 		console.log('Mobex send toNumbersArr', toNumbersArr);
@@ -117,7 +117,8 @@ class Mobex {
 
 		let result = {
 			'isSuccess': false,
-			'resultMsg': "An unknown error happened"
+			'resultMsg': "An unknown error happened",
+			'response': false
 		}
 
 		let userPass = this.username + ':' + this.password;
@@ -139,10 +140,12 @@ class Mobex {
 							}
 						]
 					}
-				},
-				callBack
+				}
 			);
 
+			result['isSuccess'] = true;
+			result['resultMsg'] = 'Success';
+			result['response'] = response;
 
 		} catch (e) {
 			result['resultMsg'] = 'Error while sending SMS with Mobex. Detail: ' + e;

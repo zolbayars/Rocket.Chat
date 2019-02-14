@@ -130,8 +130,6 @@ Template.sendSMS.events({
 		Session.set("smsLength", input.value.length);
 	},
 	'input [name="toNumbersCSV"]'(e, t) {
-		console.log("file e", e);
-		console.log("file t", t);
 		const input = e.target;
 
 		if(input.files && input.files.length > 0){
@@ -166,10 +164,6 @@ Template.sendSMS.events({
 			toNumbers = toNumbersCSV
 			toNumbersArr = toNumbers.split(/\r?\n/);
 		}
-
-		// if (instance.invalid.get() || instance.inUse.get()) {
-		// 	return e.target.name.focus();
-		// }
 
 		if(toNumbers.indexOf(',') > -1 || toNumbersArr.length > 0){
 			if(toNumbersArr.length == 0){

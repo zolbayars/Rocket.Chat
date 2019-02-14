@@ -171,6 +171,7 @@ Template.sendSMS.events({
 			}
 
 			Meteor.call('sendBatchSMS', fromNumber, toNumbersArr, smsText, (err, smsResult) => {
+				console.log("smsResult in sendSMS: ", smsResult);
 
 				if(!err){
 					if(smsResult['isSuccess']){

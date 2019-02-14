@@ -126,7 +126,7 @@ class Mobex {
 		let authToken = Base64.encode(userPass);
 
 		try {
-			const response = HTTP.call('POST', `${ this.restAddress }/secure/sendbatch`,
+			const response = await HTTP.call('POST', `${ this.restAddress }/secure/sendbatch`,
 				{
 					headers: {
 						'Authorization': 'Basic ' + authToken

@@ -32,7 +32,9 @@ Meteor.methods({
 				'data': null
 			}
 
-    	let mobexResult = SMSService.sendBatch(from, to, smsText);
+    	let mobexResult = await SMSService.sendBatch(from, to, smsText);
+
+			console.log("mobexResult result in sender.js: ", mobexResult);
 
 			if(mobexResult['isSuccess']){
 				if(mobexResult['response'].statusCode === 200){

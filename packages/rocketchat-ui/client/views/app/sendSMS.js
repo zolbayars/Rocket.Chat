@@ -175,7 +175,16 @@ Template.sendSMS.events({
 
 				if(!err){
 					if(smsResult['isSuccess']){
-						toastr.success(TAPi18n.__('Send_sms_with_mobex_success') + " " + smsResult['data']['data']['messageCount'] + " message sent.");
+
+						let smsCountText = '0';
+						try {
+							mobexGatewayResult = JSON.parse(smsResult['data']);
+							smsCountText = mobexGatewayResult['data']['messageCount'];
+						} catch (e) {
+
+						}
+
+						toastr.success(TAPi18n.__('Send_sms_with_mobex_success') + " " + smsCountText + " message sent.");
 					}else{
 						toastr.error(smsResult['resultMsg']);
 					}

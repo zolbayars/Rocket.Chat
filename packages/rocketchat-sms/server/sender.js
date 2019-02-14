@@ -43,11 +43,11 @@ Meteor.methods({
 					result.isSuccess = true;
 					result.data = mobexResult.response.content;
 				} else {
-					result.resultMsg = 'Could not able to send SMS. Code: ' + mobexResult.response.statusCode;
+					result.resultMsg = `Could not able to send SMS. Code: ${ mobexResult.response.statusCode }`;
 					console.error('SMS Mobex response: ', mobexResult.response.statusCode);
 				}
 			} else {
-				result.resultMsg  = mobexResult.resultMsg;
+				result.resultMsg = mobexResult.resultMsg;
 			}
 
       console.log('sendBatchSMS result. ', result);

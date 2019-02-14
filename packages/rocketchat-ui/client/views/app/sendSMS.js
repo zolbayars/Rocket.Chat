@@ -160,11 +160,11 @@ Template.sendSMS.events({
 			return false;
 		}
 
+		let toNumbersArr = [];
+
 		if(!toNumbers){
 			toNumbers = toNumbersCSV
-			console.log(toNumbers.split(/\r?\n/));
-			console.log(toNumbers.split(''));
-			return false;
+			toNumbersArr = toNumbers.split(/\r?\n/);
 		}
 
 		// if (instance.invalid.get() || instance.inUse.get()) {
@@ -172,7 +172,9 @@ Template.sendSMS.events({
 		// }
 
 		if(toNumbers.indexOf(',') > -1){
-			const toNumbersArr = toNumbers.split(',');
+			if(toNumbersArr.length == 0){
+				toNumbersArr = toNumbers.split(',');
+			}
 
 			Meteor.call('sendBatchSMS', fromNumber, toNumbersArr, smsText, (err, smsResult) => {
 

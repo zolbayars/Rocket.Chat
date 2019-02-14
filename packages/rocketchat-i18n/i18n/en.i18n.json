@@ -2504,7 +2504,7 @@
   "Send_sms_with_mobex_to_number": "Send to",
   "Send_sms_with_mobex_to_number_description": "Enter a single number or multiple numbers separated by comma",
   "Send_sms_with_mobex_to_number_csv": "Or upload csv file with numbers",
-  "Send_sms_with_mobex_to_number_csv_description": "The file to upload should have comma seperated numbers and .csv extension",
+  "Send_sms_with_mobex_to_number_csv_description": "The file to upload should have new line seperated numbers (put numbers in first column) and .csv extension",
   "Send_sms_with_mobex_to_number_placeholder": "Number to send (e.g. 9991234567)",
   "Send_sms_with_mobex_to_number_not_valid": "Not a valid number",
   "Send_Test": "Send Test",

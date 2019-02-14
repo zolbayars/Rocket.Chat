@@ -125,16 +125,11 @@ Template.sendSMS.events({
 		Session.set("smsLength", input.value.length);
 	},
 	'input [name="toNumbersCSV"]'(e, t) {
-		const input = e.target;
-		console.log("file input", input.files);
-		// t.toNumbersCSV.set(input.value);
-	},
-	'input [name="toNumbersCSV"]'(e, t) {
 		console.log("file e", e);
 		console.log("file t", t);
-		const file = e.target.value;
+		const input = e.target;
 
-		readFile(f, function(content) {
+		readFile(input.files[0], function(content) {
     	console.log("file content", content);
    	});
 	},

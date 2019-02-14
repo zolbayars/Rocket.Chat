@@ -110,6 +110,10 @@ Template.sendSMS.helpers({
 	},
 	smsLength() {
     return Session.get('smsLength');
+  },
+	uploadedFileName() {
+		let fileName = Session.get('uploadedFileName');
+    return fileName == "" ? "" : 'Uploaded: ' + fileName;
   }
 });
 
@@ -130,7 +134,9 @@ Template.sendSMS.events({
 		console.log("file t", t);
 		const input = e.target;
 
-		Session.set("uploadedFileName", input.files[0].name);
+		if(input.files && input.files.length > 0){
+			Session.set("uploadedFileName", input.files[0].name);
+		}
 
 		readFile(input.files[0], function(content) {
     	t.toNumbersCSV.set(content);

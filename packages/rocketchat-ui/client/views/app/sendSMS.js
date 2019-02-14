@@ -59,8 +59,8 @@ import _ from 'underscore';
 //
 
 const numberList = {
-	18139900996: "+18139900996",
 	14439370949: "+14439370949",
+	18139900996: "+18139900996",
 	18139990990: "+18139990990",
 	17272708181: "+17272708181",
 	12129181876: "+12129181876",
@@ -74,6 +74,11 @@ const numberList = {
 
 const validatePhoneNum = (numbers) => {
 	const reg = new RegExp(`^[0-9]{7,15}(,[0-9]{7,15})*$`);
+	return reg.test(numbers);
+};
+
+const validateCSVPhoneNum = (numbers) => {
+	const reg = new RegExp(`^[0-9]{7,15}(\r\n[0-9]{7,15})*$`);
 	return reg.test(numbers);
 };
 
@@ -137,7 +142,9 @@ Template.sendSMS.events({
 		}
 
 		readFile(input.files[0], function(content) {
-    	t.toNumbersCSV.set(content);
+			if(validateCSVPhoneNum(content)){
+				t.toNumbersCSV.set(content);
+			}
    	});
 	},
 	'submit .send-sms__content'(e, instance) {

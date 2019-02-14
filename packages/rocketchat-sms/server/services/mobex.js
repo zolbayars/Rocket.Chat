@@ -71,35 +71,36 @@ class Mobex {
 		console.log('Mobex send from', this.from);
 
 		let currentFrom = this.from;
-		if(fromNumber){
+		if (fromNumber) {
 			currentFrom = fromNumber;
 		}
 		console.log('Mobex send currentFrom', currentFrom);
 
 		const strippedTo = toNumber.replace(/\D/g, '');
-		let result = {
-			'isSuccess': false,
-			'resultMsg': "An unknown error happened"
-		}
+		const result = {
+			isSuccess: false,
+			resultMsg: 'An unknown error happened',
+		};
+
 		try {
 			const response = HTTP.call('GET', `${ this.address }/send?username=${ this.username }&password=${ this.password }&to=${ strippedTo }&from=${ currentFrom }&content=${ message }`);
 			if (response.statusCode === 200) {
 				console.log('SMS Mobex response: ', response.content);
-				result['resultMsg'] = response.content;
-				result['isSuccess'] = true;
+				result.resultMsg = response.content;
+				result.isSuccess = true;
 			} else {
-				result['resultMsg'] = 'Could not able to send SMS. Code: ' + response.statusCode;
+				result.resultMsg = `Could not able to send SMS. Code:  ${ response.statusCode}`;
 				console.log('SMS Mobex response: ', response.statusCode);
 			}
 		} catch (e) {
-			result['resultMsg'] = 'Error while sending SMS with Mobex. Detail: ' + e;
+			result.resultMsg = `Error while sending SMS with Mobex. Detail: ${ e }`;
 			console.error('Error while sending SMS with Mobex', e);
 		}
 
 		return result;
 
 	}
-	async sendBatch(fromNumber, toNumbersArr, message, callBack) {
+	async sendBatch(fromNumber, toNumbersArr, message) {
 
 		console.log('Mobex send fromNumber', fromNumber);
 		console.log('Mobex send toNumbersArr', toNumbersArr);
@@ -110,45 +111,45 @@ class Mobex {
 		console.log('Mobex send from', this.from);
 
 		let currentFrom = this.from;
-		if(fromNumber){
+		if (fromNumber) {
 			currentFrom = fromNumber;
 		}
 		console.log('Mobex send currentFrom', currentFrom);
 
-		let result = {
-			'isSuccess': false,
-			'resultMsg': "An unknown error happened",
-			'response': false
-		}
+		const result = {
+			isSuccess: false,
+			resultMsg: 'An unknown error happened',
+			response: false,
+		};
 
-		let userPass = this.username + ':' + this.password;
+		const userPass = `${ this.username }:${ this.password }`;
 
-		let authToken = Base64.encode(userPass);
+		const authToken = Base64.encode(userPass);
 
 		try {
 			const response = await HTTP.call('POST', `${ this.restAddress }/secure/sendbatch`,
 				{
 					headers: {
-						'Authorization': 'Basic ' + authToken
+						Authorization: `Basic ${ authToken }`,
 					},
 					data: {
-						"messages": [
+						messages: [
 							{
-								"to": toNumbersArr,
-								"from": currentFrom,
-								"content": message
-							}
-						]
-					}
+								to: toNumbersArr,
+								from: currentFrom,
+								content: message,
+							},
+						],
+					},
 				}
 			);
 
-			result['isSuccess'] = true;
-			result['resultMsg'] = 'Success';
-			result['response'] = response;
+			result.isSuccess = true;
+			result.resultMsg = 'Success';
+			result.response = response;
 
 		} catch (e) {
-			result['resultMsg'] = 'Error while sending SMS with Mobex. Detail: ' + e;
+			result.resultMsg = `Error while sending SMS with Mobex. Detail: ${ e }`;
 			console.error('Error while sending SMS with Mobex', e);
 		}
 

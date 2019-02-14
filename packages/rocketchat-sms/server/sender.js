@@ -3,38 +3,38 @@ import { RocketChat } from 'meteor/rocketchat:lib';
 
 Meteor.methods({
 	'sendSingleSMS'(from, to, smsText) {
-      console.log("sendSingleSMS called " + to);
+			console.log('sendSingleSMS called ', to);
 
     	const SMSService = RocketChat.SMS.getService(RocketChat.settings.get('SMS_Service'));
 
-      console.log("sendSingleSMS SMSService ", SMSService);
+			console.log('sendSingleSMS SMSService ', SMSService);
     	if (!SMSService) {
-    		return "You have to configure SMS service on the Admin panel to use this feature";
+    		return 'You have to configure SMS service on the Admin panel to use this feature';
     	}
 
     	const result = SMSService.send(from, to, smsText);
-      console.log("sendSingleSMS result", result);
+      console.log('sendSingleSMS result', result);
       return result;
 	},
 	async sendBatchSMS(from, to, smsText, callback) {
-      console.log("sendBatchSMS called " + to);
+      console.log('sendBatchSMS called ' + to);
 
     	const SMSService = RocketChat.SMS.getService(RocketChat.settings.get('SMS_Service'));
 
-      console.log("sendBatchSMS SMSService ", SMSService);
+      console.log('sendBatchSMS SMSService ', SMSService);
     	if (!SMSService) {
-    		return "You have to configure SMS service on the Admin panel to use this feature";
+    		return 'You have to configure SMS service on the Admin panel to use this feature';
     	}
 
 			let result = {
 				'isSuccess': false,
-				'resultMsg': "An unknown error happened",
+				'resultMsg': 'An unknown error happened',
 				'data': null
 			}
 
     	let mobexResult = await SMSService.sendBatch(from, to, smsText);
 
-			console.log("mobexResult result in sender.js: ", mobexResult);
+			console.log('mobexResult result in sender.js: ', mobexResult);
 
 			if(mobexResult['isSuccess']){
 				if(mobexResult['response'].statusCode === 200){
@@ -50,7 +50,7 @@ Meteor.methods({
 				result['resultMsg']  = mobexResult['resultMsg'];
 			}
 
-      console.log("sendBatchSMS result. ", result);
+      console.log('sendBatchSMS result. ', result);
       return result;
 	},
 

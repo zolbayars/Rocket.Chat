@@ -117,7 +117,7 @@ Template.sendSMS.events({
 	},
 	'input [name="toNumbersCSV"]'(e, t) {
 		const input = e.target;
-		console.log("file input", input);
+		console.log("file input", input.files);
 		// t.toNumbersCSV.set(input.value);
 	},
 	'submit .send-sms__content'(e, instance) {

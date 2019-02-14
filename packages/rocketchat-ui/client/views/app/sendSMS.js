@@ -145,9 +145,9 @@ Template.sendSMS.events({
 	'submit .send-sms__content'(e, instance) {
 		e.preventDefault();
 		e.stopPropagation();
-		const toNumbers = instance.toNumbers.get();
+		let toNumbers = instance.toNumbers.get();
 		const fromNumber = instance.fromNumber.get();
-		const toNumbersCSV = instance.toNumbersCSV.get();
+		let toNumbersCSV = instance.toNumbersCSV.get();
 		const smsText = instance.smsText.get();
 
 		if(!validatePhoneNum(toNumbers) && !toNumbersCSV){

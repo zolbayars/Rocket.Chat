@@ -93,6 +93,7 @@ Template.sendSMS.onCreated(function() {
 	this.smsText = new ReactiveVar(false);
 
 	Session.set("smsLength", 0);
+	Session.set("uploadedFileName", "");
 });
 
 Template.sendSMS.helpers({
@@ -129,8 +130,10 @@ Template.sendSMS.events({
 		console.log("file t", t);
 		const input = e.target;
 
+		Session.set("uploadedFileName", input.files[0].name);
+
 		readFile(input.files[0], function(content) {
-    	console.log("file content", content);
+    	t.toNumbersCSV.set(content);
    	});
 	},
 	'submit .send-sms__content'(e, instance) {
@@ -138,16 +141,23 @@ Template.sendSMS.events({
 		e.stopPropagation();
 		const toNumbers = instance.toNumbers.get();
 		const fromNumber = instance.fromNumber.get();
-		// const toNumbersCSV = instance.toNumbersCSV.get();
+		const toNumbersCSV = instance.toNumbersCSV.get();
 		const smsText = instance.smsText.get();
 
-		if(!validatePhoneNum(toNumbers)){
+		if(!validatePhoneNum(toNumbers) && !toNumbersCSV){
 			toastr.warning(TAPi18n.__('Send_sms_with_mobex_error_to_num'));
 			return false;
 		}
 
 		if(!smsText || smsText == '' || smsText.length == 0){
 			toastr.warning(TAPi18n.__('Send_sms_with_mobex_error_text'));
+			return false;
+		}
+
+		if(!toNumbers){
+			toNumbers = toNumbersCSV
+			console.log(toNumbers.split(/\r?\n/));
+			console.log(toNumbers.split(''));
 			return false;
 		}
 

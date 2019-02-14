@@ -2495,7 +2495,7 @@
   "Send_sms_with_mobex_char_count": "Character count:",
   "Send_sms_with_mobex_description": "Select a number and send sms to anyone",
   "Send_sms_with_mobex_error": "An error occured while sending SMS",
-  "Send_sms_with_mobex_error_to_num": "Number to send is invalid. Look at the example.",
+  "Send_sms_with_mobex_error_to_num": "Given number is invalid or no csv file uploaded. Look at the example.",
   "Send_sms_with_mobex_error_text": "SMS text is empty!",
   "Send_sms_with_mobex_from": "From",
   "Send_sms_with_mobex_success": "SMS sent successfully.",

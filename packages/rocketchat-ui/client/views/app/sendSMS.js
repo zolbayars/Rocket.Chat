@@ -20,19 +20,19 @@ const numberList = {
 };
 
 const validatePhoneNum = (numbers) => {
-	const reg = new RegExp('^[0-9]{7,15}(,[0-9]{7,15})*$');
+	const reg = new RegExp(`^[0-9]{7,15}(,[0-9]{7,15})*$`);
 	return reg.test(numbers);
 };
 
 const validateCSVPhoneNum = (numbers) => {
-	const reg = new RegExp('^[0-9]{7,15}(\r\n[0-9]{7,15})*$');
+	const reg = new RegExp(`^[0-9]{7,15}(\r\n[0-9]{7,15})*$`);
 	return reg.test(numbers);
 };
 
 const readFile = function(f, onLoadCallback) {
-	var reader = new FileReader();
- 	reader.onload = function(e){
-  	let contents = e.target.result;
+	let reader = new FileReader();
+ 	reader.onload = function(e) {
+  	const contents = e.target.result;
   	onLoadCallback(contents);
  	};
  	reader.readAsText(f);
@@ -109,7 +109,7 @@ Template.sendSMS.events({
 			return false;
 		}
 
-		if (!smsText || smsText == '' || smsText.length == 0) {
+		if (!smsText || smsText === '' || smsText.length === 0) {
 			toastr.warning(TAPi18n.__('Send_sms_with_mobex_error_text'));
 			return false;
 		}
@@ -122,7 +122,7 @@ Template.sendSMS.events({
 		}
 
 		if (toNumbers.indexOf(',') > -1 || toNumbersArr.length > 0) {
-			if (toNumbersArr.length == 0) {
+			if (toNumbersArr.length === 0) {
 				toNumbersArr = toNumbers.split(',');
 			}
 
@@ -134,10 +134,10 @@ Template.sendSMS.events({
 
 						let smsCountText = '0';
 						try {
-							mobexGatewayResult = JSON.parse(smsResult.data);
+							const mobexGatewayResult = JSON.parse(smsResult.data);
 							smsCountText = mobexGatewayResult.data.messageCount;
 						} catch (e) {
-
+							console.error('Error in sendBatchSMS sendSMS.js',e);
 						}
 
 						toastr.success(`${ TAPi18n.__('Send_sms_with_mobex_success') } ${ smsCountText } message sent.`);

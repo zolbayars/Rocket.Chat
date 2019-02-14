@@ -71,18 +71,18 @@ Template.sendSMS.helpers({
 });
 
 Template.sendSMS.events({
-	'change [name='fromNumber']'(e, t) {
+	'change [name="fromNumber"]'(e, t) {
 		t.fromNumber.set(e.target.value);
 	},
-	'change [name='toNumbers']'(e, t) {
+	'change [name="toNumbers"]'(e, t) {
 		t.toNumbers.set(e.target.value);
 	},
-	'input [name='smsText']'(e, t) {
+	'input [name="smsText"]'(e, t) {
 		const input = e.target;
 		t.smsText.set(input.value);
 		Session.set('smsLength', input.value.length);
 	},
-	'input [name='toNumbersCSV']'(e, t) {
+	'input [name="toNumbersCSV"]'(e, t) {
 		const input = e.target;
 
 		if(input.files && input.files.length > 0){

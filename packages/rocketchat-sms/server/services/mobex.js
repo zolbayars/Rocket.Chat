@@ -89,7 +89,7 @@ class Mobex {
 				result.resultMsg = response.content;
 				result.isSuccess = true;
 			} else {
-				result.resultMsg = `Could not able to send SMS. Code:  ${ response.statusCode}`;
+				result.resultMsg = `Could not able to send SMS. Code:  ${ response.statusCode }`;
 				console.log('SMS Mobex response: ', response.statusCode);
 			}
 		} catch (e) {

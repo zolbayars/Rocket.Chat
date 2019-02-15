@@ -162,7 +162,7 @@ class Mobex {
 			headers: {
 				'Content-Type': 'text/xml',
 			},
-			body: 'ACK/Mobex',
+			body: 'ACK/Jasmin',
 		};
 	}
 	error(error) {

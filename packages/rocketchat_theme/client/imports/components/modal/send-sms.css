@@ -1,4 +1,4 @@
-.send-sms-container{
+.send-sms-container {
 	display: flex;
 	flex-direction: column;
 
@@ -23,8 +23,8 @@
 	}
 
 	& .rc-input input[type="submit"] {
-		background: var(--button-primary-background);
 		color: var(--button-primary-text-color);
+		background: var(--button-primary-background);
 	}
 
 	& .rc-header--fullpage {
@@ -134,7 +134,7 @@
 }
 
 @media (width <= 1280px) {
-	.send-sms-container{
+	.send-sms-container {
 		padding: 0 2rem;
 	}
 }

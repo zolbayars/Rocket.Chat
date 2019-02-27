@@ -17,5 +17,8 @@
 		"RocketChat"                  : true,
 		"roomExit"                    : true,
 		"Settings"                    : false
-	}
+	},
+  "rules": {
+    "no-control-regex": 0
+  }
 }

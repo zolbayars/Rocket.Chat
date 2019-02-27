@@ -5,44 +5,45 @@ import { TAPi18n } from 'meteor/tap:i18n';
 import { Session } from 'meteor/session';
 import toastr from 'toastr';
 
-const numberList = {
-	14439370949: '+14439370949',
-	18139900996: '+18139900996',
-	18139990990: '+18139990990',
-	17272708181: '+17272708181',
-	12129181876: '+12129181876',
-	12028755580: '+12028755580',
-	18135638800: '+18135638800',
-	18339568700: '+18339568700',
-	18558766239: '+18558766239',
-	18448555611: '+18448555611',
-	18132804355: '+18132804355',
-};
-
 const validatePhoneNum = (numbers) => {
-	const reg = new RegExp(`^[0-9]{7,15}(,[0-9]{7,15})*$`);
+	const reg = new RegExp('^[0-9]{7,15}(,[0-9]{7,15})*$');
 	return reg.test(numbers);
 };
 
 const validateCSVPhoneNum = (numbers) => {
-	const reg = new RegExp(`^[0-9]{7,15}(\r\n[0-9]{7,15})*$`);
+	const reg = new RegExp('^[0-9]{7,15}(\r\n[0-9]{7,15})*$');
 	return reg.test(numbers);
 };
 
 const readFile = function(f, onLoadCallback) {
-	let reader = new FileReader();
- 	reader.onload = function(e) {
-  	const contents = e.target.result;
-  	onLoadCallback(contents);
- 	};
- 	reader.readAsText(f);
+	const reader = new FileReader();
+	reader.onload = function(e) {
+		const contents = e.target.result;
+		onLoadCallback(contents);
+	};
+	reader.readAsText(f);
 };
 
 Template.sendSMS.onCreated(function() {
-	this.fromNumber = new ReactiveVar(Object.keys(numberList)[0]);
 	this.toNumbers = new ReactiveVar(false);
 	this.toNumbersCSV = new ReactiveVar(false);
 	this.smsText = new ReactiveVar(false);
+
+	this.fromNumbersList = new ReactiveVar({});
+	this.fromNumber = new ReactiveVar('');
+
+	Meteor.call('getFromNumbersList', (err, fromNumbersArr) => {
+
+		if (!err) {
+
+			this.fromNumbersList.set(fromNumbersArr);
+			this.fromNumber.set(Object.keys(fromNumbersArr)[0]);
+
+		} else {
+			toastr.error(TAPi18n.__('Send_sms_with_mobex_error_from_number_list'));
+		}
+
+	});
 
 	Session.set('smsLength', 0);
 	Session.set('uploadedFileName', '');
@@ -50,7 +51,11 @@ Template.sendSMS.onCreated(function() {
 
 Template.sendSMS.helpers({
 	fromNumbers() {
-		const result = Object.entries(numberList)
+		// console.log('fromNumbers from template', Template.instance().fromNumbersList.get());
+		// console.log(Object.entries(Template.instance().fromNumbersList));
+		// console.log(Object.keys(Template.instance().fromNumbersList.get()));
+
+		const result = Object.entries(Template.instance().fromNumbersList.get())
 			.map(([number, formattedNumber]) => ({ name: formattedNumber, key: number }));
 
 		return result;
@@ -63,12 +68,12 @@ Template.sendSMS.helpers({
 		return '';
 	},
 	smsLength() {
-    return Session.get('smsLength');
-  },
+		return Session.get('smsLength');
+	},
 	uploadedFileName() {
 		const fileName = Session.get('uploadedFileName');
-    return fileName === '' ? '' : `Uploaded: ${ fileName }`;
-  },
+		return fileName === '' ? '' : `Uploaded: ${ fileName }`;
+	},
 });
 
 Template.sendSMS.events({
@@ -94,7 +99,7 @@ Template.sendSMS.events({
 			if (validateCSVPhoneNum(content)) {
 				t.toNumbersCSV.set(content);
 			}
-   	});
+		});
 	},
 	'submit .send-sms__content'(e, instance) {
 		e.preventDefault();
@@ -137,7 +142,7 @@ Template.sendSMS.events({
 							const mobexGatewayResult = JSON.parse(smsResult.data);
 							smsCountText = mobexGatewayResult.data.messageCount;
 						} catch (e) {
-							console.error('Error in sendBatchSMS sendSMS.js',e);
+							console.error('Error in sendBatchSMS sendSMS.js', e);
 						}
 
 						toastr.success(`${ TAPi18n.__('Send_sms_with_mobex_success') } ${ smsCountText } message sent.`);

@@ -140,3 +140,11 @@
 		padding: 0 2rem;
 	}
 }
+
+@media (height <= 720px) {
+	.send-sms-container {
+		& .rc-input {
+			margin-bottom: 1rem;
+		}
+	}
+}

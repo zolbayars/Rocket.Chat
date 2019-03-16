@@ -4,9 +4,9 @@
 	"globals": {
 		"__meteor_bootstrap__"        : false,
 		"__meteor_runtime_config__"   : false,
-		"Apps"                        : false,
 		"Assets"                      : false,
 		"chrome"                      : false,
+<<<<<<< HEAD
 		"DynamicCss"                  : false,
 		"handleError"                 : false,
 		"getAvatarSuggestionForUser"  : false,
@@ -21,4 +21,8 @@
   "rules": {
     "no-control-regex": 0
   }
+=======
+		"jscolor"                     : false
+	}
+>>>>>>> cb06a450369c74dd144987bd90e3b28dd3343005
 }

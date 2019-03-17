@@ -1,9 +1,9 @@
 .send-sms-container {
 	display: flex;
+	overflow-x: hidden;
+	overflow-y: auto;
 	flex-direction: column;
 
-	overflow-x: hidden;
- 	overflow-y: auto;
 	height: 100vh;
 
 	padding: 0 5rem;

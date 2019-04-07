@@ -17,7 +17,7 @@ function findChannelByIdOrName({ params, checkedArchived = true, userId }) {
 		room = RocketChat.models.Rooms.findOneByName(params.roomName, { fields });
 	}
 
-	if (!room || room.t !== 'c') {
+	if (!room || (room.t !== 'c' && room.t !== 'l')) {
 		throw new Meteor.Error('error-room-not-found', 'The required "roomId" or "roomName" param provided does not match any channel');
 	}
 

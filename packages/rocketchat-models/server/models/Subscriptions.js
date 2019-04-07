@@ -721,6 +721,7 @@ export class Subscriptions extends Base {
 		const update = {
 			$set: {
 				fname,
+				name: fname,
 			},
 		};
 

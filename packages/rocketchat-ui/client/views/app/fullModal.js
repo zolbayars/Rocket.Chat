@@ -13,6 +13,7 @@ FlowRouter.route('/create-channel', {
 	}],
 
 	action() {
+
 		if (parent) {
 			Blaze.renderWithData(Template.fullModal, { template: 'createChannel' }, parent);
 		} else {

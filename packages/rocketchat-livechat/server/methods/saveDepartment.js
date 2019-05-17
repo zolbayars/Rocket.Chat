@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { RocketChat } from 'meteor/rocketchat:lib';
 
+// TODO Company Registration #2
 Meteor.methods({
 	'livechat:saveDepartment'(_id, departmentData, departmentAgents) {
 		if (!Meteor.userId() || !RocketChat.authz.hasPermission(Meteor.userId(), 'view-livechat-manager')) {

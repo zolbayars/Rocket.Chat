@@ -27,12 +27,21 @@ class LivechatDepartment extends RocketChat.models._Base {
 		return this.find(query, options);
 	}
 
-	createOrUpdateDepartment(_id, { enabled, name, description, showOnRegistration }, agents) {
+	findByDepartmentPhone(phone, options) {
+		const query = { phone };
+
+		return this.find(query, options);
+	}
+
+	// TODO Company Registration #4
+	createOrUpdateDepartment(_id, { enabled, name, rid, phone, description, showOnRegistration }, agents) {
 		agents = [].concat(agents);
 
 		const record = {
 			enabled,
 			name,
+			rid,
+			phone,
 			description,
 			numAgents: agents.length,
 			showOnRegistration,

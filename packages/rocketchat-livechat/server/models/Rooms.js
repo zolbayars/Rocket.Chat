@@ -154,6 +154,15 @@ RocketChat.models.Rooms.findByVisitorId = function(visitorId) {
 	return this.find(query);
 };
 
+// Used to receive livechat messages on a channel
+RocketChat.models.Rooms.findOneByDepartmentName = function(name) {
+	const query = {
+		'name': name,
+	};
+
+	return this.find(query);
+};
+
 RocketChat.models.Rooms.findOneOpenByRoomIdAndVisitorToken = function(roomId, visitorToken, options) {
 	const query = {
 		_id: roomId,

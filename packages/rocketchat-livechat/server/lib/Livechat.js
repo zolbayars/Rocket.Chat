@@ -111,7 +111,7 @@ RocketChat.Livechat = {
 			newRoom = true;
 		}
 
-		if (!room || room.v.token !== guest.token) {
+		if (!room || ( room.v && room.v.token !== guest.token)) {
 			throw new Meteor.Error('cannot-access-room');
 		}
 
@@ -750,12 +750,18 @@ RocketChat.Livechat = {
 		RocketChat.models.Rooms.removeByVisitorToken(token);
 	},
 
+	// TODO Company Registration #3
 	saveDepartment(_id, departmentData, departmentAgents) {
 		check(_id, Match.Maybe(String));
 
 		check(departmentData, {
 			enabled: Boolean,
 			name: String,
+			rid: Match.Maybe(String),
+			phone: Match.Where(function(str){
+				const reg = new RegExp('^[0-9]{7,15}(,[0-9]{7,15})*$');
+				return reg.test(str);
+			}),
 			description: Match.Optional(String),
 			showOnRegistration: Boolean,
 		});

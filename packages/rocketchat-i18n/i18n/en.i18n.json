@@ -642,6 +642,7 @@
   "Copy_to_clipboard": "Copy to clipboard",
   "COPY_TO_CLIPBOARD": "COPY TO CLIPBOARD",
   "could-not-access-webdav": "Could not access WebDAV",
+  "Could_not_create_department_channel": "Could not create a channel for this department. Try again later.",
   "Count": "Count",
   "Counters": "Counters",
   "Country": "Country",

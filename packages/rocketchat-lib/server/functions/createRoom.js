@@ -42,6 +42,10 @@ RocketChat.createRoom = function(type, name, owner, members, readOnly, extraData
 		sysMes: readOnly !== true,
 	});
 
+	if(extraData.customFields.open){
+		room.open = true
+	}
+
 	if (type === 'd') {
 		room.usernames = members;
 	}
@@ -108,6 +112,8 @@ RocketChat.createRoom = function(type, name, owner, members, readOnly, extraData
 		// so, we don't really care if it is successful or fails
 		Apps.getBridges().getListenerBridge().roomEvent('IPostRoomCreate', room);
 	}
+
+	console.log('just before return on createRoom', room);
 
 	return {
 		rid: room._id,

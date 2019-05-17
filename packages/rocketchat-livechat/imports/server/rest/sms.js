@@ -3,6 +3,7 @@ import { Random } from 'meteor/random';
 import { RocketChat } from 'meteor/rocketchat:lib';
 import LivechatVisitors from '../../../server/models/LivechatVisitors';
 
+// TODO receiving SMS
 RocketChat.API.v1.addRoute('livechat/sms-incoming/:service', {
 	post() {
 		const SMSService = RocketChat.SMS.getService(this.urlParams.service);
@@ -46,6 +47,20 @@ RocketChat.API.v1.addRoute('livechat/sms-incoming/:service', {
 			});
 
 			visitor = LivechatVisitors.findOneById(visitorId);
+		}
+
+		try {
+			// If there's a department with this number, send it to its channel
+			const department = RocketChat.models.LivechatDepartment.findByDepartmentPhone(sms.to).fetch()
+			console.log('department in incoming SMS', department[0]);
+			
+			if(department && department.length > 0){
+				// const rooms = RocketChat.models.Rooms.findOneByIdOrName();
+				sendMessage.message.rid = department[0].rid;
+				sendMessage.message.token = visitor.token;
+			}
+		} catch (error) {
+			console.error('error while getting department in incoming SMS', error);
 		}
 
 		sendMessage.message.msg = sms.body;

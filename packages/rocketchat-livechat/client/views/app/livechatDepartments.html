@@ -5,6 +5,7 @@
 				<thead>
 					<tr>
 						<th width="20%">{{_ "Name"}}</th>
+						<th width="20%">{{_ "SMS Number"}}</th>
 						<th width="30%">{{_ "Description"}}</th>
 						<th width="10%">{{_ "Num_Agents"}}</th>
 						<th width="20%">{{_ "Enabled"}}</th>
@@ -16,6 +17,7 @@
 					{{#each departments}}
 						<tr class="department-info row-link" data-id="{{_id}}">
 							<td>{{name}}</td>
+							<td>{{phone}}</td>
 							<td>{{description}}</td>
 							<td>{{numAgents}}</td>
 							<td>{{#if enabled}}{{_ "Yes"}}{{else}}{{_ "No"}}{{/if}}</td>

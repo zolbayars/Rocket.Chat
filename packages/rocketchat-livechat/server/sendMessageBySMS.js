@@ -2,6 +2,11 @@ import { RocketChat } from 'meteor/rocketchat:lib';
 import LivechatVisitors from './models/LivechatVisitors';
 
 RocketChat.callbacks.add('afterSaveMessage', function(message, room) {
+
+	console.log('sendMessageBySms called message', message);
+	console.log('sendMessageBySms called message channels', message.channels);
+	console.log('sendMessageBySms called room', room);
+	
 	// skips this callback if the message was edited
 	if (message.editedAt) {
 		return message;

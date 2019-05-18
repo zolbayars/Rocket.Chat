@@ -12,12 +12,13 @@ RocketChat.callbacks.add('afterSaveMessage', function(message, room) {
 		return message;
 	}
 
-	if (!RocketChat.SMS.enabled) {
+	if (!RocketChat.SMS.enabled && message.u.username !== 'mobex.bot') {
 		return message;
 	}
 
 	// only send the sms by SMS if it is a livechat room with SMS set to true
-	if (!(typeof room.t !== 'undefined' && room.t === 'l' && room.sms && room.v && room.v.token)) {
+	// plus that, send by SMS if it's from the Mobex Bot 
+	if (message.u.username !== 'mobex.bot' && !(typeof room.t !== 'undefined' && room.t === 'l' && room.sms && room.v && room.v.token)) {
 		return message;
 	}
 
@@ -37,13 +38,18 @@ RocketChat.callbacks.add('afterSaveMessage', function(message, room) {
 		return message;
 	}
 
-	const visitor = LivechatVisitors.getVisitorByToken(room.v.token);
-
-	if (!visitor || !visitor.phone || visitor.phone.length === 0) {
-		return message;
+	// Check if mobex bot is trying to send SMS
+	if (message.u.username === 'mobex.bot') {
+		SMSService.send(null, message.customFields.toNumber, message.customFields.text);
+	} else {
+		const visitor = LivechatVisitors.getVisitorByToken(room.v.token);
+	
+		if (!visitor || !visitor.phone || visitor.phone.length === 0) {
+			return message;
+		}
+	
+		SMSService.send(room.sms.from, visitor.phone[0].phoneNumber, message.msg);
 	}
-
-	SMSService.send(room.sms.from, visitor.phone[0].phoneNumber, message.msg);
 
 	return message;
 

@@ -40,6 +40,8 @@ Template.livechatDepartmentForm.events({
 		const enabled = instance.$('input[name=enabled]:checked').val();
 		const name = instance.$('input[name=name]').val();
 		const phone = instance.$('input[name=phone]').val();
+		const mobexUsername = instance.$('input[name=mobexUsername]').val();
+		const mobexPassword = instance.$('input[name=mobexPassword]').val();
 		const description = instance.$('textarea[name=description]').val();
 		const showOnRegistration = instance.$('input[name=showOnRegistration]:checked').val();
 
@@ -58,6 +60,8 @@ Template.livechatDepartmentForm.events({
 			enabled: enabled === '1',
 			name: name.trim(),
 			phone: phone.trim(),
+			mobexUsername: mobexUsername.trim(),
+			mobexPassword: mobexPassword.trim(),
 			description: description.trim(),
 			showOnRegistration: showOnRegistration === '1',
 		};
@@ -81,8 +85,12 @@ Template.livechatDepartmentForm.events({
 			if(currentChannel){
 				departmentData.rid = currentChannel._id
 			} else {
+				let members = departmentAgents.map((agent) => agent.username);
+				members.push('rocket.cat');
+				members.push('mobex.bot');
+
 				Meteor.call('createPrivateGroup', validChannelName, 
-					departmentAgents.map((agent) => agent.username), {}, {open: true}, function(error, channelCreationResult){
+					members, {}, {open: true, mobexUsername, mobexPassword, phone}, function(error, channelCreationResult){
 
 						if(error) {
 							console.error('Error while creating a channel for department', error.message);

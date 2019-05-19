@@ -762,6 +762,8 @@ RocketChat.Livechat = {
 				const reg = new RegExp('^[0-9]{7,15}(,[0-9]{7,15})*$');
 				return reg.test(str);
 			}),
+			mobexUsername: String,
+			mobexPassword: String,
 			description: Match.Optional(String),
 			showOnRegistration: Boolean,
 		});

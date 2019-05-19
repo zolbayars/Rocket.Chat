@@ -40,7 +40,8 @@ RocketChat.callbacks.add('afterSaveMessage', function(message, room) {
 
 	// Check if mobex bot is trying to send SMS
 	if (message.u.username === 'mobex.bot') {
-		SMSService.send(null, message.customFields.toNumber, message.customFields.text);
+		SMSService.send(room.customFields.phone, message.customFields.toNumber, message.customFields.text, 
+			room.customFields.mobexUsername, room.customFields.mobexPassword);
 	} else {
 		const visitor = LivechatVisitors.getVisitorByToken(room.v.token);
 	

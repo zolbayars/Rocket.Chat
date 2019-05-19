@@ -34,7 +34,7 @@ class LivechatDepartment extends RocketChat.models._Base {
 	}
 
 	// TODO Company Registration #4
-	createOrUpdateDepartment(_id, { enabled, name, rid, phone, description, showOnRegistration }, agents) {
+	createOrUpdateDepartment(_id, { enabled, name, rid, phone, mobexUsername, mobexPassword, description, showOnRegistration }, agents) {
 		agents = [].concat(agents);
 
 		const record = {
@@ -42,6 +42,8 @@ class LivechatDepartment extends RocketChat.models._Base {
 			name,
 			rid,
 			phone,
+			mobexUsername,
+			mobexPassword,
 			description,
 			numAgents: agents.length,
 			showOnRegistration,

@@ -46,6 +46,11 @@ RocketChat.createRoom = function(type, name, owner, members, readOnly, extraData
 		room.open = true
 	}
 
+	if(extraData.customFields.mobexUsername && extraData.customFields.mobexPassword){
+		room.mobex_username = extraData.customFields.mobexUsername;
+		room.mobex_password = extraData.customFields.mobexPassword;
+	}
+
 	if (type === 'd') {
 		room.usernames = members;
 	}

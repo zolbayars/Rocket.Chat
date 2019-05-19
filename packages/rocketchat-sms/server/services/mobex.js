@@ -60,20 +60,32 @@ class Mobex {
 
 		return returnData;
 	}
-	send(fromNumber, toNumber, message) {
+	send(fromNumber, toNumber, message, username = null, password = null, address = null) {
 
 		console.log('Mobex send fromNumber', fromNumber);
 		console.log('Mobex send toNumber', toNumber);
 		console.log('Mobex send message', message);
-		console.log('Mobex send username', this.username);
-		console.log('Mobex send address', this.address);
-		console.log('Mobex send password', this.password);
+		console.log('Mobex send username', username);
+		console.log('Mobex send address', address);
+		console.log('Mobex send password', password);
 		console.log('Mobex send from', this.from);
 
 		let currentFrom = this.from;
+		let currentUsername = this.username;
+		let currentAddress = this.address;
+		let currentPassword = this.password;
+
 		if (fromNumber) {
 			currentFrom = fromNumber;
 		}
+		if (username && password) {
+			currentUsername = username;
+			currentPassword = password
+		}
+		if (address) {
+			currentAddress = address;
+		}
+
 		console.log('Mobex send currentFrom', currentFrom);
 
 		const strippedTo = toNumber.replace(/\D/g, '');
@@ -83,7 +95,7 @@ class Mobex {
 		};
 
 		try {
-			const response = HTTP.call('GET', `${ this.address }/send?username=${ this.username }&password=${ this.password }&to=${ strippedTo }&from=${ currentFrom }&content=${ message }`);
+			const response = HTTP.call('GET', `${ currentAddress }/send?username=${ currentUsername }&password=${ currentPassword }&to=${ strippedTo }&from=${ currentFrom }&content=${ message }`);
 			if (response.statusCode === 200) {
 				console.log('SMS Mobex response: ', response.content);
 				result.resultMsg = response.content;

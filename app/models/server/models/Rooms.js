@@ -195,6 +195,15 @@ export class Rooms extends Base {
 		return this.find(query);
 	}
 
+	// Used to receive livechat messages on a channel
+	findOneByDepartmentName = function(name) {
+		const query = {
+			name,
+		};
+
+		return this.find(query);
+	};
+
 	findOneOpenByRoomIdAndVisitorToken(roomId, visitorToken, options) {
 		const query = {
 			_id: roomId,

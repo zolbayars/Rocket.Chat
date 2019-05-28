@@ -105,6 +105,17 @@ export const createRoom = function(type, name, owner, members, readOnly, extraDa
 		sysMes: readOnly !== true,
 	});
 
+	// Mobex Department Creation Start
+	if (extraData.customFields.open) {
+		room.open = true;
+	}
+
+	if (extraData.customFields.mobexUsername && extraData.customFields.mobexPassword) {
+		room.mobex_username = extraData.customFields.mobexUsername;
+		room.mobex_password = extraData.customFields.mobexPassword;
+	}
+	// Mobex Department Creation End
+
 	if (type === 'd') {
 		room.usernames = members;
 	}

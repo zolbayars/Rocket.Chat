@@ -180,6 +180,18 @@ FlowRouter.route('/setup-wizard/final', {
 	},
 });
 
+FlowRouter.route('/send-sms', {
+	name: 'send-sms',
+
+	action() {
+		BlazeLayout.render('main', { center: 'sendSMS' });
+	},
+	triggersExit: [function() {
+		$('.main-content').addClass('rc-old');
+	}],
+});
+
+
 FlowRouter.notFound = {
 	action() {
 		BlazeLayout.render('pageNotFound');

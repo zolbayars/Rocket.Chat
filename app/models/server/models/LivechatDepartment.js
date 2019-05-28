@@ -28,12 +28,22 @@ export class LivechatDepartment extends Base {
 		return this.find(query, options);
 	}
 
-	createOrUpdateDepartment(_id, { enabled, name, description, showOnRegistration, email, showOnOfflineForm }, agents) {
+	findByDepartmentPhone(phone, options) {
+		const query = { phone };
+
+		return this.find(query, options);
+	}
+
+	createOrUpdateDepartment(_id, { enabled, name, rid, phone, mobexUsername, mobexPassword, description, showOnRegistration, email, showOnOfflineForm }, agents) {
 		agents = [].concat(agents);
 
 		const record = {
 			enabled,
 			name,
+			rid,
+			phone,
+			mobexUsername,
+			mobexPassword,
 			description,
 			numAgents: agents.length,
 			showOnRegistration,

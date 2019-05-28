@@ -53,6 +53,7 @@
 /* Modal */
 @import 'imports/components/modal/full-modal.css';
 @import 'imports/components/modal/create-channel.css';
+@import 'imports/components/modal/send-sms.css';
 
 /* User Info */
 @import 'imports/components/userInfo.css';

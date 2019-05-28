@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Random } from 'meteor/random';
 
-import { Rooms, LivechatVisitors } from '../../../../models';
+import { Rooms, LivechatVisitors, LivechatDepartment } from '../../../../models';
 import { API } from '../../../../api';
 import { SMS } from '../../../../sms';
 import { Livechat } from '../../../server/lib/Livechat';
@@ -11,6 +11,8 @@ API.v1.addRoute('livechat/sms-incoming/:service', {
 		const SMSService = SMS.getService(this.urlParams.service);
 
 		const sms = SMSService.parse(this.bodyParams);
+
+		console.log('sms-incoming called: ', sms);
 
 		let visitor = LivechatVisitors.findOneVisitorByPhone(sms.from);
 
@@ -47,6 +49,20 @@ API.v1.addRoute('livechat/sms-incoming/:service', {
 			});
 
 			visitor = LivechatVisitors.findOneById(visitorId);
+		}
+
+		// Mobex Department Creation
+		try {
+			// If there's a department with this number, send it to its channel
+			const department = LivechatDepartment.findByDepartmentPhone(sms.to).fetch();
+			console.log('department in incoming SMS', department[0]);
+
+			if (department && department.length > 0) {
+				sendMessage.message.rid = department[0].rid;
+				sendMessage.message.token = visitor.token;
+			}
+		} catch (error) {
+			console.error('error while getting department in incoming SMS', error);
 		}
 
 		sendMessage.message.msg = sms.body;

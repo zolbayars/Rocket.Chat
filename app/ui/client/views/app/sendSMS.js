@@ -33,16 +33,12 @@ Template.sendSMS.onCreated(function() {
 	this.fromNumber = new ReactiveVar('');
 
 	Meteor.call('getFromNumbersList', (err, fromNumbersArr) => {
-
 		if (!err) {
-
 			this.fromNumbersList.set(fromNumbersArr);
 			this.fromNumber.set(Object.keys(fromNumbersArr)[0]);
-
 		} else {
 			toastr.error(TAPi18n.__('Send_sms_with_mobex_error_from_number_list'));
 		}
-
 	});
 
 	Session.set('smsLength', 0);
@@ -136,7 +132,6 @@ Template.sendSMS.events({
 
 				if (!err) {
 					if (smsResult.isSuccess) {
-
 						let smsCountText = '0';
 						try {
 							const mobexGatewayResult = JSON.parse(smsResult.data);
@@ -149,26 +144,21 @@ Template.sendSMS.events({
 					} else {
 						toastr.error(smsResult.resultMsg);
 					}
-
 				} else {
 					toastr.error(TAPi18n.__('Send_sms_with_mobex_error'));
 				}
-
 			});
 		} else {
 			Meteor.call('sendSingleSMS', fromNumber, toNumbers, smsText, (err, smsResult) => {
-
 				if (!err) {
 					if (smsResult.isSuccess) {
 						toastr.success(`${ TAPi18n.__('Send_sms_with_mobex_success') } ${ smsResult.resultMsg }`);
 					} else {
 						toastr.error(smsResult.resultMsg);
 					}
-
 				} else {
 					toastr.error(TAPi18n.__('Send_sms_with_mobex_error'));
 				}
-
 			});
 		}
 

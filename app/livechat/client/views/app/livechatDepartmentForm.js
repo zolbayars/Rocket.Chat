@@ -87,64 +87,54 @@ Template.livechatDepartmentForm.events({
 			departmentAgents.push(agent);
 		});
 
-		Meteor.call('livechat:saveDepartment', _id, departmentData, departmentAgents, function(error/* , result*/) {
-			$btn.html(oldBtnValue);
-			if (error) {
-				return handleError(error);
-			}
+		// Mobex Department Creation
+		// Creating a channel whenever a department is created
+		try {
+			const validChannelName = departmentData.name.trim().replace(/\s/gi, '-');
 
-			// Mobex Department Creation
-			// Creating a channel whenever a department is created
-			try {
-				const validChannelName = departmentData.name.trim().replace(/\s/gi, '-');
+			const currentChannel = Meteor.call('checkDepartmentChannel', validChannelName);
+			console.log('currentChannel', currentChannel);
 
-				const currentChannel = Meteor.call('checkDepartmentChannel', validChannelName);
-				console.log('currentChannel', currentChannel);
+			if (currentChannel) {
+				departmentData.rid = currentChannel._id;
 
-				if (currentChannel) {
-					departmentData.rid = currentChannel._id;
+				Meteor.call('livechat:saveDepartment', _id, departmentData, departmentAgents, function(error/* , result*/) {
+					$btn.html(oldBtnValue);
+					if (error) {
+						return handleError(error);
+					}
 
-					Meteor.call('livechat:saveDepartment', _id, departmentData, departmentAgents, function(error/* , result*/) {
-						$btn.html(oldBtnValue);
+					toastr.success(t('Saved'));
+					FlowRouter.go('livechat-departments');
+				});
+			} else {
+				const members = departmentAgents.map((agent) => agent.username);
+				members.push('rocket.cat');
+				members.push('mobex.bot');
+
+				Meteor.call('createPrivateGroup', validChannelName,
+					members, {}, { open: true, mobexUsername, mobexPassword, phone }, function(error, channelCreationResult) {
 						if (error) {
-							return handleError(error);
+							console.error('Error while creating a channel for department', error.message);
+							return toastr.error(t('Could_not_create_department_channel'));
 						}
+						console.log('channelCreationResult', channelCreationResult);
+						departmentData.rid = channelCreationResult.rid;
 
-						toastr.success(t('Saved'));
-						FlowRouter.go('livechat-departments');
-					});
-				} else {
-					const members = departmentAgents.map((agent) => agent.username);
-					members.push('rocket.cat');
-					members.push('mobex.bot');
-
-					Meteor.call('createPrivateGroup', validChannelName,
-						members, {}, { open: true, mobexUsername, mobexPassword, phone }, function(error, channelCreationResult) {
+						Meteor.call('livechat:saveDepartment', _id, departmentData, departmentAgents, function(error/* , result*/) {
+							$btn.html(oldBtnValue);
 							if (error) {
-								console.error('Error while creating a channel for department', error.message);
-								return toastr.error(t('Could_not_create_department_channel'));
+								return handleError(error);
 							}
-							console.log('channelCreationResult', channelCreationResult);
-							departmentData.rid = channelCreationResult.rid;
 
-							Meteor.call('livechat:saveDepartment', _id, departmentData, departmentAgents, function(error/* , result*/) {
-								$btn.html(oldBtnValue);
-								if (error) {
-									return handleError(error);
-								}
-
-								toastr.success(t('Saved'));
-								FlowRouter.go('livechat-departments');
-							});
+							toastr.success(t('Saved'));
+							FlowRouter.go('livechat-departments');
 						});
-				}
-
-				toastr.success(t('Saved'));
-				FlowRouter.go('livechat-departments');
-			} catch (error) {
-				console.error('error while creating channel', error);
+					});
 			}
-		});
+		} catch (error) {
+			console.error('error while creating channel', error);
+		}
 	},
 
 	'click button.back'(e/* , instance*/) {

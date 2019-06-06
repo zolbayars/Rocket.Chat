@@ -5,7 +5,7 @@ import { Rooms } from '../../../models';
 
 // Mobex Department Creation
 Meteor.methods({
-	checkDepartmentChannel(name) {
+	'livechat:checkDepartmentChannel'(name) {
 		check(name, String);
 
 		return Rooms.findOneByDepartmentName(name).fetch();

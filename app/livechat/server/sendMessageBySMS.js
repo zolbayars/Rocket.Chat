@@ -1,7 +1,7 @@
 import { callbacks } from '../../callbacks';
 import { settings } from '../../settings';
 import { SMS } from '../../sms';
-import { LivechatVisitors } from '../../models';
+import { LivechatVisitors, Messages } from '../../models';
 
 callbacks.add('afterSaveMessage', function(message, room) {
 	console.log('sendMessageBySms called message', message);
@@ -13,13 +13,21 @@ callbacks.add('afterSaveMessage', function(message, room) {
 		return message;
 	}
 
-	if (!SMS.enabled && message.u.username !== 'mobex.bot') {
+	// skip if it's not from mobex.bot
+	if (!SMS.enabled && message.u.username !== 'mobex.bot' && !(room.customFields && room.customFields.mobexUsername)) {
 		return message;
+	}
+
+	if (room.customFields && room.customFields.mobexUsername) {
+		const customerNumber = parseInt(message.u.username);
+		if (message.u.username !== 'mobex.bot' && !isNaN(customerNumber)) {
+			Messages.addToOrUpdateThread(message.u._id, message._id, message.ts, room._id);
+		}
 	}
 
 	// only send the sms by SMS if it is a livechat room with SMS set to true
 	// plus that, send by SMS if it's from the Mobex Bot
-	if (message.u.username !== 'mobex.bot' && !(typeof room.t !== 'undefined' && room.t === 'l' && room.sms && room.v && room.v.token)) {
+	if (message.u.username !== 'mobex.bot' && !(typeof room.t !== 'undefined' && room.t === 'l' && room.sms && room.v && room.v.token) && !room.phone) {
 		return message;
 	}
 
@@ -39,11 +47,22 @@ callbacks.add('afterSaveMessage', function(message, room) {
 		return message;
 	}
 
+
 	// Check if mobex bot is trying to send SMS
 	if (message.u.username === 'mobex.bot') {
 		SMSService.send(room.customFields.phone, message.customFields.toNumber, message.customFields.text,
 			room.customFields.mobexUsername, room.customFields.mobexPassword);
+	} else if (message.tmid && room.phone) {
+		// Sending message to a number from a company channel
+		const thread = Messages.findThreadById(message.tmid, room._id);
+		const toUser = parseInt(thread.u.username);
+		if (!isNaN(toUser)) {
+			SMSService.send(room.phone, `${ toUser }`, message.msg);
+		}
 	} else {
+		if (!room.v) {
+			return message;
+		}
 		const visitor = LivechatVisitors.getVisitorByToken(room.v.token);
 
 		if (!visitor || !visitor.phone || visitor.phone.length === 0) {

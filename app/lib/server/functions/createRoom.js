@@ -113,6 +113,7 @@ export const createRoom = function(type, name, owner, members, readOnly, extraDa
 	if (extraData.customFields.mobexUsername && extraData.customFields.mobexPassword) {
 		room.mobex_username = extraData.customFields.mobexUsername;
 		room.mobex_password = extraData.customFields.mobexPassword;
+		room.phone = extraData.customFields.phone;
 	}
 	// Mobex Department Creation End
 

@@ -1120,28 +1120,33 @@ export class Messages extends Base {
 			'u._id': userId,
 			rid: roomId,
 		};
+		const threadReplyCount = this.find(query).count();
 		const thread = this.findOne(query);
-		console.log('thread', thread);
+		console.log('thread count', threadReplyCount);
 
-		const messageUpdateRes = this.update({ _id: newMessageId }, { $set: { tmid: thread._id } });
-		console.log('messageUpdateRes', messageUpdateRes);
+		if (threadReplyCount > 1) {
+			const messageUpdateRes = this.update({ _id: newMessageId }, { $set: { tmid: thread._id } });
+			console.log('messageUpdateRes', messageUpdateRes);
 
-		const threadUpdate = {
-			$addToSet: {
-				replies: userId,
-			},
-			$set: {
-				tlm: newMessageTS,
-			},
-			$inc: {
-				tcount: 1,
-			},
-		};
+			const threadUpdate = {
+				$addToSet: {
+					replies: userId,
+				},
+				$set: {
+					tlm: newMessageTS,
+				},
+				$inc: {
+					tcount: 1,
+				},
+			};
 
-		const threadUpdateRes = this.update({ _id: thread._id }, threadUpdate);
-		console.log('threadUpdateRes', threadUpdateRes);
+			const threadUpdateRes = this.update({ _id: thread._id }, threadUpdate);
+			console.log('threadUpdateRes', threadUpdateRes);
 
-		return threadUpdateRes;
+			return threadUpdateRes;
+		}
+
+		return thread;
 	}
 
 	findThreadById(tmid, roomId) {

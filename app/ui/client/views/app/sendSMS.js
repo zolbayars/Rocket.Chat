@@ -11,6 +11,7 @@ const validatePhoneNum = (numbers) => {
 };
 
 const validateCSVPhoneNum = (numbers) => {
+	// eslint-disable-next-line no-control-regex
 	const reg = new RegExp('^[0-9]{7,15}(\r\n[0-9]{7,15})*$');
 	return reg.test(numbers);
 };

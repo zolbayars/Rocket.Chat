@@ -220,6 +220,7 @@ const toolbarButtons = (user) => [{
 {
 	name: t('Send_sms_with_mobex'),
 	icon: 'send-sms',
+	condition: () => AccountBox.getItems().length || hasAtLeastOnePermission(['manage-emoji', 'manage-integrations', 'manage-oauth-apps', 'manage-own-integrations', 'manage-sounds', 'view-logs', 'view-privileged-setting', 'view-room-administration', 'view-statistics', 'view-user-administration']),
 	action: () => {
 		menu.close();
 		FlowRouter.go('send-sms');

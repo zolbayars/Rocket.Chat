@@ -278,8 +278,16 @@ Template.userEdit.onCreated(function() {
 				if (error) {
 					return handleError(error);
 				}
-				toastr.success(userData._id ? t('User_updated_successfully') : t('User_added_successfully'));
+				toastr.success(t('User_updated_successfully'));
 				this.cancel(form, userData.username);
+
+				Meteor.call('updateVisitorMessages', userData._id, userData, (error) => {
+					if (error) {
+						return handleError(error);
+					}
+					toastr.success(t('User_messages_updated_successfully'));
+					this.cancel(form, userData.username);
+				});
 			});
 			return;
 		}

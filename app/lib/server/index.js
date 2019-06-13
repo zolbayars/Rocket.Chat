@@ -67,6 +67,7 @@ import './methods/unblockUser';
 import './methods/updateMessage';
 import './publications/settings';
 import './methods/updateVisitor';
+import './methods/updateVisitorMessages';
 
 export * from './lib';
 export * from './functions';

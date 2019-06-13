@@ -165,6 +165,8 @@ Template.userEdit.onCreated(function() {
 	this.roles = this.user ? new ReactiveVar(this.user.roles) : new ReactiveVar([]);
 	this.avatar = new ReactiveVar();
 	this.url = new ReactiveVar('');
+	this.isVisitor = new ReactiveVar(!this.user.username);
+
 	Notifications.onLogged('updateAvatar', () => this.avatar.set());
 
 	const { tabBar } = Template.currentData();
@@ -202,11 +204,17 @@ Template.userEdit.onCreated(function() {
 		const userData = this.getUserData();
 
 		const errors = [];
-		if (settings.get('Accounts_RequireNameForSignUp') && !userData.name) {
-			errors.push('Name');
-		}
 		if (!userData.username) {
 			errors.push('Username');
+		}
+
+		// If it's a visitor, below checks are not necessary
+		if (Template.instance().isVisitor) {
+			return errors.length === 0;
+		}
+
+		if (settings.get('Accounts_RequireNameForSignUp') && !userData.name) {
+			errors.push('Name');
 		}
 		if (!userData.email) {
 			errors.push('Email');
@@ -241,6 +249,8 @@ Template.userEdit.onCreated(function() {
 			}
 		}
 
+		console.log('userData', userData);
+
 		const avatar = this.avatar.get();
 		if (avatar) {
 			let method;
@@ -261,6 +271,17 @@ Template.userEdit.onCreated(function() {
 					callbacks.run('userAvatarSet', avatar.service);
 				}
 			});
+		}
+
+		if (Template.instance().isVisitor) {
+			Meteor.call('updateVisitor', userData._id, userData, (error) => {
+				if (error) {
+					return handleError(error);
+				}
+				toastr.success(userData._id ? t('User_updated_successfully') : t('User_added_successfully'));
+				this.cancel(form, userData.username);
+			});
+			return;
 		}
 
 		Meteor.call('insertOrUpdateUser', userData, (error) => {

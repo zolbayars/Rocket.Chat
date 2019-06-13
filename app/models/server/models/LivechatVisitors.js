@@ -90,6 +90,14 @@ export class LivechatVisitors extends Base {
 		return this.findOne(query);
 	}
 
+	findVisitorByPhone(phone, options) {
+		const query = {
+			'phone.phoneNumber': phone,
+		};
+
+		return this.find(query, options);
+	}
+
 	getVisitorsBetweenDate(date) {
 		const query = {
 			_updatedAt: {

@@ -186,6 +186,35 @@ Template.userInfo.helpers({
 		const user = Template.instance().user.get();
 		return settings.get('Accounts_ManuallyApproveNewUsers') && user.active === false && user.reason;
 	},
+
+	shouldShowEdit() {
+		const user = Template.instance().user.get();
+		console.log(user);
+
+		if (user.name && user.roles && user.roles.length > 0) {
+			return false;
+		}
+		return true;
+	},
+
+	editingVisitor() {
+		return Template.instance().action.get() === 'edit';
+	},
+
+	editVisitorDetails() {
+		const instance = Template.instance();
+		const user = instance.user.get();
+		return {
+			visitorId: user ? user._id : null,
+			roomId: this.rid,
+			save() {
+				instance.action.set();
+			},
+			cancel() {
+				instance.action.set();
+			},
+		};
+	},
 });
 
 Template.userInfo.events({
@@ -232,12 +261,18 @@ Template.userInfo.events({
 	'click .js-back'(e, instance) {
 		return instance.clear();
 	},
+	'click .edit-visitor-info'(event, instance) {
+		event.preventDefault();
+
+		instance.action.set('edit');
+	},
 });
 
 Template.userInfo.onCreated(function() {
 	this.now = new ReactiveVar(moment());
 	this.user = new ReactiveVar();
 	this.actions = new ReactiveVar();
+	this.action = new ReactiveVar();
 
 	this.autorun(() => {
 		const user = this.user.get();

@@ -2,7 +2,7 @@ import s from 'underscore.string';
 
 import { Logger } from '../../../logger';
 import { settings } from '../../../settings';
-import { Users } from '../../../models/server';
+import { Users, LivechatVisitors } from '../../../models/server';
 import { hasPermission } from '../../../authorization';
 
 const logger = new Logger('getFullUserData');
@@ -82,6 +82,12 @@ export const getFullUserData = function({ userId, filter, limit: l }) {
 
 	if (!username) {
 		return Users.find({}, options);
+	}
+
+	if (!userToRetrieveFullUserData) {
+		console.log('username', username);
+		const visitor = LivechatVisitors.findVisitorByPhone(username);
+		return visitor;
 	}
 
 	if (limit === 1) {

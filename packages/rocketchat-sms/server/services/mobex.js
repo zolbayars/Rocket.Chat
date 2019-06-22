@@ -10,15 +10,19 @@ class Mobex {
 		this.password = RocketChat.settings.get('SMS_Mobex_password');
 		this.from = RocketChat.settings.get('SMS_Mobex_from_number');
 	}
+
 	parse(data) {
 		let numMedia = 0;
+
+		const convert = (from, to) => (str) => Buffer.from(str, from).toString(to);
+		const hexToUtf8 = convert('hex', 'utf8');
 
 		console.log('Mobex parse: ', data);
 
 		const returnData = {
 			from: data.from,
 			to: data.to,
-			body: data.content,
+			body: data.binary ? hexToUtf8(data.binary) : data.content,
 
 			// extra: {
 			// 	toCountry: data.ToCountry,
@@ -60,8 +64,8 @@ class Mobex {
 
 		return returnData;
 	}
-	send(fromNumber, toNumber, message) {
 
+	send(fromNumber, toNumber, message) {
 		console.log('Mobex send fromNumber', fromNumber);
 		console.log('Mobex send toNumber', toNumber);
 		console.log('Mobex send message', message);
@@ -98,10 +102,9 @@ class Mobex {
 		}
 
 		return result;
-
 	}
-	async sendBatch(fromNumber, toNumbersArr, message) {
 
+	async sendBatch(fromNumber, toNumbersArr, message) {
 		console.log('Mobex send fromNumber', fromNumber);
 		console.log('Mobex send toNumbersArr', toNumbersArr);
 		console.log('Mobex send message', message);
@@ -147,15 +150,14 @@ class Mobex {
 			result.isSuccess = true;
 			result.resultMsg = 'Success';
 			result.response = response;
-
 		} catch (e) {
 			result.resultMsg = `Error while sending SMS with Mobex. Detail: ${ e }`;
 			console.error('Error while sending SMS with Mobex', e);
 		}
 
 		return result;
-
 	}
+
 	response(/* message */) {
 		console.log('Mobex response called');
 		return {
@@ -165,6 +167,7 @@ class Mobex {
 			body: 'ACK/Jasmin',
 		};
 	}
+
 	error(error) {
 		console.error('Mobex error called', error);
 		let message = '';

@@ -15,7 +15,7 @@ class Mobex {
 		let numMedia = 0;
 
 		const convert = (from, to) => (str) => Buffer.from(str, from).toString(to);
-		const hexToUtf8 = convert('hex', 'utf8');
+		const hexToUtf8 = convert('hex', 'latin1');
 
 		console.log('Mobex parse: ', data);
 

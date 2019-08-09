@@ -16,6 +16,9 @@ Meteor.startup(function() {
 			}, {
 				key: 'mobex',
 				i18nLabel: 'Mobex',
+			}, {
+				key: 'teli',
+				i18nLabel: 'Teli',
 			}],
 			i18nLabel: 'Service',
 		});
@@ -94,5 +97,34 @@ Meteor.startup(function() {
 			});
 		});
 
+		this.section('Teli', function() {
+			this.add('SMS_Teli_restful_address', '', {
+				type: 'string',
+				enableQuery: {
+					_id: 'SMS_Service',
+					value: 'teli',
+				},
+				i18nLabel: 'Teli_sms_gateway_restful_address',
+				i18nDescription: 'Teli_sms_gateway_restful_address_desc',
+			});
+			this.add('SMS_Teli_token', '', {
+				type: 'string',
+				enableQuery: {
+					_id: 'SMS_Service',
+					value: 'teli',
+				},
+				i18nLabel: 'Teli_sms_token',
+				i18nDescription: 'Teli_sms_token_desc',
+			});
+			this.add('SMS_Teli_from_number', '', {
+				type: 'int',
+				enableQuery: {
+					_id: 'SMS_Service',
+					value: 'teli',
+				},
+				i18nLabel: 'Teli_sms_from_number',
+				i18nDescription: 'Teli_sms_from_number_desc',
+			});
+		});
 	});
 });

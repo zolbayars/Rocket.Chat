@@ -60,10 +60,11 @@ class Teli {
 		return returnData;
 	}
 
-	send(fromNumber, toNumber, message) {
+	send(fromNumber, toNumber, message, fileName = null, fileData = null) {
 		console.log('Teli send fromNumber', fromNumber);
 		console.log('Teli send toNumber', toNumber);
 		console.log('Teli send message', message);
+		console.log('Teli send fileName', fileName);
 		console.log('Teli send from', this.from);
 
 		let currentFrom = this.from;
@@ -78,9 +79,25 @@ class Teli {
 			resultMsg: 'An unknown error happened',
 		};
 
+		let smsBody = {
+			params: { source: currentFrom, destination: toNumber, message },
+		};
+		let type = 'sms';
+
+		if (fileData) {
+			type = 'mms';
+			smsBody = {
+				params: {
+					source: currentFrom,
+					destination: toNumber,
+					file_name: fileName,
+					file_data: fileData,
+				},
+			};
+		}
 		try {
-			const response = HTTP.call('POST', `${ this.address }/sms/send?token=${ this.token }`,
-				{ params: { source: currentFrom, destination: toNumber, message } });
+			const response = HTTP.call('POST', `${ this.address }/${ type }/send?token=${ this.token }`,
+				smsBody);
 			if (response.statusCode === 200) {
 				console.log('SMS Teli response: ', response.content);
 				result.resultMsg = response.content;

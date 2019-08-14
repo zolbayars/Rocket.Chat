@@ -18,7 +18,7 @@ Meteor.startup(function() {
 				i18nLabel: 'Mobex',
 			}, {
 				key: 'teli',
-				i18nLabel: 'Teli',
+				i18nLabel: 'Mobex MMS',
 			}],
 			i18nLabel: 'Service',
 		});
@@ -97,7 +97,7 @@ Meteor.startup(function() {
 			});
 		});
 
-		this.section('Teli', function() {
+		this.section('Mobex MMS', function() {
 			this.add('SMS_Teli_restful_address', '', {
 				type: 'string',
 				enableQuery: {

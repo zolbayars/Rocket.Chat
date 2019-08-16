@@ -3,6 +3,7 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { Template } from 'meteor/templating';
 import { TAPi18n } from 'meteor/tap:i18n';
 import { Session } from 'meteor/session';
+import { Base64 } from 'meteor/base64';
 import toastr from 'toastr';
 
 const validatePhoneNum = (numbers) => {
@@ -24,10 +25,22 @@ const readFile = function(f, onLoadCallback) {
 	reader.readAsText(f);
 };
 
+const readMMSFile = function(f, onLoadCallback) {
+	const reader = new FileReader();
+	reader.onload = function(e) {
+		const contents = e.target.result;
+		onLoadCallback(contents);
+	};
+	reader.readAsArrayBuffer(f);
+};
+
 Template.sendSMS.onCreated(function() {
 	this.toNumbers = new ReactiveVar(false);
 	this.toNumbersCSV = new ReactiveVar(false);
 	this.smsText = new ReactiveVar(false);
+
+	this.mmsFile = new ReactiveVar(false);
+	this.mmsFileName = new ReactiveVar(false);
 
 	this.fromNumbersList = new ReactiveVar({});
 	this.fromNumber = new ReactiveVar('');
@@ -47,6 +60,7 @@ Template.sendSMS.onCreated(function() {
 
 	Session.set('smsLength', 0);
 	Session.set('uploadedFileName', '');
+	Session.set('uploadedMMSFileName', '');
 });
 
 Template.sendSMS.helpers({
@@ -74,6 +88,10 @@ Template.sendSMS.helpers({
 		const fileName = Session.get('uploadedFileName');
 		return fileName === '' ? '' : `Uploaded: ${ fileName }`;
 	},
+	uploadedMMSFileName() {
+		const fileName = Session.get('uploadedMMSFileName');
+		return fileName === '' ? '' : `Uploaded: ${ fileName }`;
+	},
 });
 
 Template.sendSMS.events({
@@ -99,6 +117,18 @@ Template.sendSMS.events({
 			if (validateCSVPhoneNum(content)) {
 				t.toNumbersCSV.set(content);
 			}
+		});
+	},
+	'input [name="mmsFile"]'(e, t) {
+		const input = e.target;
+
+		if (input.files && input.files.length > 0) {
+			Session.set('uploadedMMSFileName', input.files[0].name);
+		}
+
+		readMMSFile(input.files[0], function(content) {
+			t.mmsFile.set(content);
+			t.mmsFileName.set(input.files[0].name);
 		});
 	},
 	'submit .send-sms__content'(e, instance) {
@@ -158,6 +188,81 @@ Template.sendSMS.events({
 		} else {
 			Meteor.call('sendSingleSMS', fromNumber, toNumbers, smsText, (err, smsResult) => {
 
+				if (!err) {
+					if (smsResult.isSuccess) {
+						toastr.success(`${ TAPi18n.__('Send_sms_with_mobex_success') } ${ smsResult.resultMsg }`);
+					} else {
+						toastr.error(smsResult.resultMsg);
+					}
+
+				} else {
+					toastr.error(TAPi18n.__('Send_sms_with_mobex_error'));
+				}
+
+			});
+		}
+
+		return false;
+	},
+	'click #mms-send-button'(e, instance) {
+		e.preventDefault();
+		e.stopPropagation();
+		let toNumbers = instance.toNumbers.get();
+		const fromNumber = instance.fromNumber.get();
+		const toNumbersCSV = instance.toNumbersCSV.get();
+		const mmsFile = instance.mmsFile.get();
+		const mmsFileName = instance.mmsFileName.get();
+
+		console.log('mmsFile', mmsFile);
+		console.log('mmsFile', new Uint8Array(mmsFile));
+
+		if (!validatePhoneNum(toNumbers) && !toNumbersCSV) {
+			toastr.warning(TAPi18n.__('Send_sms_with_mobex_error_to_num'));
+			return false;
+		}
+
+		if (!mmsFile) {
+			toastr.warning(TAPi18n.__('Send_mms_with_mobex_error_text'));
+			return false;
+		}
+
+		let toNumbersArr = [];
+
+		if (!toNumbers) {
+			toNumbers = toNumbersCSV;
+			toNumbersArr = toNumbers.split(/\r?\n/);
+		}
+
+		if (toNumbers.indexOf(',') > -1 || toNumbersArr.length > 0) {
+			if (toNumbersArr.length === 0) {
+				toNumbersArr = toNumbers.split(',');
+			}
+
+			Meteor.call('sendBatchMMS', fromNumber, toNumbersArr, mmsFileName, new Uint8Array(mmsFile), (err, smsResult) => {
+				console.log('smsResult in sendSMS: ', smsResult);
+
+				if (!err) {
+					if (smsResult.isSuccess) {
+						let smsCountText = '0';
+						try {
+							const mobexGatewayResult = JSON.parse(smsResult.data);
+							smsCountText = mobexGatewayResult.data.messageCount;
+						} catch (e) {
+							console.error('Error in sendBatchSMS sendSMS.js', e);
+						}
+
+						toastr.success(`${ TAPi18n.__('Send_sms_with_mobex_success') } ${ smsCountText } message sent.`);
+					} else {
+						toastr.error(smsResult.resultMsg);
+					}
+
+				} else {
+					toastr.error(TAPi18n.__('Send_sms_with_mobex_error'));
+				}
+
+			});
+		} else {
+			Meteor.call('sendSingleMMS', fromNumber, toNumbers, mmsFileName, new Uint8Array(mmsFile), (err, smsResult) => {
 				if (!err) {
 					if (smsResult.isSuccess) {
 						toastr.success(`${ TAPi18n.__('Send_sms_with_mobex_success') } ${ smsResult.resultMsg }`);

@@ -125,6 +125,15 @@ Meteor.startup(function() {
 				i18nLabel: 'Teli_sms_from_number',
 				i18nDescription: 'Teli_sms_from_number_desc',
 			});
+			this.add('MMS_Mobex_from_numbers_list', '', {
+				type: 'string',
+				enableQuery: {
+					_id: 'SMS_Service',
+					value: 'teli',
+				},
+				i18nLabel: 'Mobex_sms_gateway_from_numbers_list_mms',
+				i18nDescription: 'Mobex_sms_gateway_from_numbers_list_desc',
+			});
 		});
 	});
 });

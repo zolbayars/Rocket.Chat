@@ -247,11 +247,9 @@ Template.sendSMS.events({
 					} else {
 						toastr.error(smsResult.resultMsg);
 					}
-
 				} else {
 					toastr.error(TAPi18n.__('Send_sms_with_mobex_error'));
 				}
-
 			});
 		} else {
 			Meteor.call('sendSingleMMS', fromNumber, toNumbers, mmsFileName, new Uint8Array(mmsFile), (err, smsResult) => {
@@ -261,11 +259,9 @@ Template.sendSMS.events({
 					} else {
 						toastr.error(smsResult.resultMsg);
 					}
-
 				} else {
 					toastr.error(TAPi18n.__('Send_sms_with_mobex_error'));
 				}
-
 			});
 		}
 

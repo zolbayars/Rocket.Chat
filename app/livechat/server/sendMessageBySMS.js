@@ -1,9 +1,9 @@
 import { callbacks } from '../../callbacks';
 import { settings } from '../../settings';
 import { SMS } from '../../sms';
-import { LivechatVisitors, Messages } from '../../models';
+import { LivechatVisitors, Messages, UploadsChunks } from '../../models';
 
-callbacks.add('afterSaveMessage', function(message, room) {
+callbacks.add('afterSaveMessage', async function(message, room) {
 	console.log('sendMessageBySms called message', message);
 	console.log('sendMessageBySms called message channels', message.channels);
 	console.log('sendMessageBySms called room', room);
@@ -68,6 +68,19 @@ callbacks.add('afterSaveMessage', function(message, room) {
 		if (!visitor || !visitor.phone || visitor.phone.length === 0) {
 			return message;
 		}
+
+		// Check if it's a MMS
+		if (message.attachments && message.attachments.length > 0 && message.file) {
+			const fileContent = UploadsChunks.findByFileId(message.file._id);
+
+			const attachmentInBase64 = Buffer.from(fileContent.data).toString('base64');
+			console.log('b64encoded MMS attachment', attachmentInBase64);
+
+			SMSService.send(room.sms.from, visitor.phone[0].phoneNumber, null, message.file.name, attachmentInBase64);
+		} else {
+			SMSService.send(room.sms.from, visitor.phone[0].phoneNumber, message.msg);
+		}
+
 
 		SMSService.send(room.sms.from, visitor.phone[0].phoneNumber, message.msg);
 	}

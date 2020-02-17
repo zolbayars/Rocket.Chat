@@ -1,6 +1,6 @@
 <template name="sendSMS">
 	<section class="send-sms-container">
-		{{> header sectionName="Send SMS with Mobex" hideHelp=true fullpage=true}}
+		{{> header sectionName="Send SMS/MMS with Mobex" hideHelp=true fullpage=true}}
 
 			<form class="send-sms__content">
 
@@ -71,9 +71,31 @@
 				</div>
 
 				<div class="rc-input">
+					<label class="rc-input__label">
+						<div class="rc-input__title">{{_ "Send_mms_with_mobex_file"}}</div>
 						<div class="rc-input__wrapper">
-							<input class="rc-button rc-button--primary rc-button--full" type="submit" data-button="create"  value="{{_ "Send"}}">
+							<div class="send-sms-file-preview">
+								<div class="preview no-file background-transparent-light secondary-font-color"><i class="icon-upload"></i></div>
+								<div class="action">
+									<div class="rc-button rc-button--primary">{{_ 'Select_file'}}
+										<input type="file" name="mmsFile" accept="image/*,audio/*,video/*" />
+									</div>
+								</div>
+							</div>
 						</div>
+					</label>
+					<div class="rc-input__description"><b>{{ uploadedMMSFileName }}</b> {{_ "Send_mms_with_mobex_file_description"}}</div>
+					<div class="rc-input__description">{{_ "Send_mms_with_mobex_file_description_1"}}</div>
+					<div class="rc-input__description">{{_ "Send_mms_with_mobex_file_description_2"}}</div>
+				</div>
+
+
+				<div class="rc-input">
+					<div class="rc-input__wrapper">
+						<input class="rc-button rc-button--primary rc-button--full" type="submit" style="display: inline" data-button="create"  value="{{_ "Send SMS"}}">
+						<input id="mms-send-button" class="rc-button rc-button--primary rc-button--full"
+							type="button" style="background-color: #1d74f5; color: white; display: inline" data-button="create"  value="{{_ "Send MMS"}}">
+					</div>
 				</div>
 
 				</form>

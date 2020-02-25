@@ -91,6 +91,7 @@ Template.livechatDepartmentForm.events({
 
 		// Mobex Department Creation
 		// Creating a channel whenever a department is created
+		// TODO - here we have to update the current private group
 		try {
 			const validChannelName = departmentData.name.trim().replace(/\s/gi, '-');
 

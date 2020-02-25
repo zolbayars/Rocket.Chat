@@ -61,6 +61,10 @@ class Teli {
 		return returnData;
 	}
 
+	getServiceName() {
+		return 'teli';
+	}
+
 	send(fromNumber, toNumber, message, fileName = null, fileData = null) {
 		console.log('Teli send fromNumber', fromNumber);
 		console.log('Teli send toNumber', toNumber);

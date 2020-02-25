@@ -64,6 +64,10 @@ class Mobex {
 		return returnData;
 	}
 
+	getServiceName() {
+		return 'mobex';
+	}
+
 	send(fromNumber, toNumber, message, username = null, password = null, address = null) {
 		console.log('Mobex send fromNumber', fromNumber);
 		console.log('Mobex send toNumber', toNumber);

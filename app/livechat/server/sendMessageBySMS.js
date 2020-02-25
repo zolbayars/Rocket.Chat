@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import { callbacks } from '../../callbacks';
 import { settings } from '../../settings';
 import { SMS } from '../../sms';
@@ -47,11 +48,30 @@ callbacks.add('afterSaveMessage', async function(message, room) {
 		return message;
 	}
 
+	const getSMSServiceName = () => {
+		let name = 'notMobex';
+		try {
+			name = SMSService.getServiceName();
+		} catch (error) {
+			console.error('error while getting SMS service name', error);
+		}
+		console.log('SMS service name', name);
+		return name;
+	};
+
 
 	// Check if mobex bot is trying to send SMS
 	if (message.u.username === 'mobex.bot') {
-		SMSService.send(room.customFields.phone, message.customFields.toNumber, message.customFields.text,
-			room.customFields.mobexUsername, room.customFields.mobexPassword);
+		if (getSMSServiceName() === 'teli') {
+			SMSService.send(room.customFields.phone, message.customFields.toNumber, message.customFields.text);
+		} else {
+			// throw new Error('Please choose Mobex MMS as the SMS service provider on Admin → SMS!');
+			return message;
+		}
+
+		// Turned out the following would only work for the Mobex service
+		// SMSService.send(room.customFields.phone, message.customFields.toNumber, message.customFields.text,
+		// 	room.customFields.mobexUsername, room.customFields.mobexPassword);
 	} else if (message.tmid && room.phone) {
 		// Sending message to a number from a company channel
 		const thread = Messages.findThreadById(message.tmid, room._id);

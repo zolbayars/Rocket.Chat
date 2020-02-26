@@ -102,7 +102,7 @@ callbacks.add('afterSaveMessage', async function(message, room) {
 		}
 
 
-		SMSService.send(room.sms.from, visitor.phone[0].phoneNumber, message.msg);
+		// SMSService.send(room.sms.from, visitor.phone[0].phoneNumber, message.msg);
 	}
 
 	return message;

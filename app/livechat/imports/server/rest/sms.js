@@ -26,6 +26,7 @@ API.v1.addRoute('livechat/sms-incoming/:service', {
 				},
 			},
 		};
+		let sendMessageToChannel = null;
 
 		if (visitor) {
 			const rooms = Rooms.findOpenByVisitorToken(visitor.token).fetch();
@@ -65,21 +66,6 @@ API.v1.addRoute('livechat/sms-incoming/:service', {
 			visitor = LivechatVisitors.findOneById(visitorId);
 		}
 
-		// Mobex Department Creation
-		// use this to send the SMS to its department channel
-		try {
-			// If there's a department with this number, send it to its channel
-			const department = LivechatDepartment.findByDepartmentPhone(sms.to).fetch();
-			console.log('department in incoming SMS', department[0]);
-
-			if (department && department.length > 0) {
-				sendMessage.message.rid = department[0].rid;
-				sendMessage.message.token = visitor.token;
-			}
-		} catch (error) {
-			console.error('error while getting department in incoming SMS', error);
-		}
-
 		sendMessage.message.msg = sms.body;
 		sendMessage.guest = visitor;
 
@@ -104,8 +90,28 @@ API.v1.addRoute('livechat/sms-incoming/:service', {
 			return attachment;
 		});
 
+		// Mobex Department Creation
+		// use this to send the SMS to its department channel
+		try {
+			// If there's a department with this number, send it to its channel
+			const department = LivechatDepartment.findByDepartmentPhone(sms.to).fetch();
+			console.log('department in incoming SMS', department[0]);
+
+			if (department && department.length > 0) {
+				sendMessageToChannel = sendMessage;
+				sendMessageToChannel.message.rid = department[0].rid;
+				sendMessageToChannel.message.token = visitor.token;
+			}
+		} catch (error) {
+			console.error('error while getting department in incoming SMS', error);
+		}
+
 		try {
 			const message = SMSService.response.call(this, Livechat.sendMessage(sendMessage));
+
+			if (sendMessageToChannel) {
+				Livechat.sendMessage(sendMessageToChannel);
+			}
 
 			Meteor.defer(() => {
 				if (sms.extra) {

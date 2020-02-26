@@ -107,11 +107,17 @@ API.v1.addRoute('livechat/sms-incoming/:service', {
 		}
 
 		try {
+			console.log('sendMessage', sendMessage);
+			console.log('sendMessageToChannel', sendMessageToChannel);
+
+
 			const message = SMSService.response.call(this, Livechat.sendMessage(sendMessage));
 
 			if (sendMessageToChannel) {
-				Livechat.sendMessage(sendMessageToChannel);
+				const messageToChannel = SMSService.response.call(this, Livechat.sendMessage(sendMessageToChannel));
+				console.log('messageToChannel', messageToChannel);
 			}
+			console.log('message', message);
 
 			Meteor.defer(() => {
 				if (sms.extra) {

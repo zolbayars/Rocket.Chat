@@ -101,6 +101,7 @@ API.v1.addRoute('livechat/sms-incoming/:service', {
 				sendMessageToChannel = sendMessage;
 				sendMessageToChannel.message.rid = department[0].rid;
 				sendMessageToChannel.message.token = visitor.token;
+				sendMessageToChannel.message._id = Random.id();
 			}
 		} catch (error) {
 			console.error('error while getting department in incoming SMS', error);

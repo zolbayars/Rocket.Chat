@@ -36,6 +36,20 @@ API.v1.addRoute('livechat/sms-incoming/:service', {
 				sendMessage.message.rid = Random.id();
 			}
 			sendMessage.message.token = visitor.token;
+
+			try {
+				// If there's a department with this number, send it to its channel
+				const department = LivechatDepartment.findByDepartmentPhone(sms.to).fetch();
+				console.log('department in incoming SMS', department[0]);
+
+				if (department && department.length > 0) {
+					console.log('setting department for the visitor now');
+					Livechat.setDepartmentForGuest({ token: visitor.token, department });
+					console.log('updated visitor', visitor);
+				}
+			} catch (error) {
+				console.error('error while getting department in incoming SMS', error);
+			}
 		} else {
 			sendMessage.message.rid = Random.id();
 			sendMessage.message.token = Random.id();
@@ -52,6 +66,7 @@ API.v1.addRoute('livechat/sms-incoming/:service', {
 		}
 
 		// Mobex Department Creation
+		// use this to send the SMS to its department channel
 		try {
 			// If there's a department with this number, send it to its channel
 			const department = LivechatDepartment.findByDepartmentPhone(sms.to).fetch();

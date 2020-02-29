@@ -22,7 +22,12 @@ callbacks.add('afterSaveMessage', async function(message, room) {
 	if (room.customFields && room.customFields.mobexUsername) {
 		const customerNumber = parseInt(message.u.username);
 		if (message.u.username !== 'mobex.bot' && !isNaN(customerNumber)) {
-			Messages.addToOrUpdateThread(message.u._id, message._id, message.ts, room._id);
+			try {
+				Messages.addToOrUpdateThread(message.u._id, message._id, message.ts, room._id);
+			} catch (error) {
+				// When we receive SMS and redirect it to a department channel, this one is getting called too
+				console.error('Error while addToOrUpdateThread', error.message);
+			}
 		}
 	}
 

@@ -28,8 +28,12 @@ API.v1.addRoute('livechat/sms-incoming/:service', {
 		};
 		let sendMessageToChannel = null;
 
+		console.log('visitor', visitor);
+
 		if (visitor) {
 			const rooms = Rooms.findOpenLivechatByVisitorToken(visitor.token).fetch();
+
+			console.log('room on findOpenLivechatByVisitorToken', rooms);
 
 			if (rooms && rooms.length > 0) {
 				sendMessage.message.rid = rooms[0]._id;
@@ -98,7 +102,7 @@ API.v1.addRoute('livechat/sms-incoming/:service', {
 			console.log('department in incoming SMS', department[0]);
 
 			if (department && department.length > 0) {
-				sendMessageToChannel = sendMessage;
+				sendMessageToChannel = Object.create(sendMessage);
 				sendMessageToChannel.message.rid = department[0].rid;
 				sendMessageToChannel.message.token = visitor.token;
 				sendMessageToChannel.message._id = Random.id();

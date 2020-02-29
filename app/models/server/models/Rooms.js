@@ -169,6 +169,16 @@ export class Rooms extends Base {
 		return this.find(query, options);
 	}
 
+	findOpenLivechatByVisitorToken(visitorToken, options) {
+		const query = {
+			open: true,
+			t: 'l',
+			'v.token': visitorToken,
+		};
+
+		return this.find(query, options);
+	}
+
 	findOpenByVisitorTokenAndDepartmentId(visitorToken, departmentId, options) {
 		const query = {
 			open: true,

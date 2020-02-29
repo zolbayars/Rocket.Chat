@@ -29,7 +29,7 @@ API.v1.addRoute('livechat/sms-incoming/:service', {
 		let sendMessageToChannel = null;
 
 		if (visitor) {
-			const rooms = Rooms.findOpenByVisitorToken(visitor.token).fetch();
+			const rooms = Rooms.findOpenLivechatByVisitorToken(visitor.token).fetch();
 
 			if (rooms && rooms.length > 0) {
 				sendMessage.message.rid = rooms[0]._id;
@@ -38,19 +38,19 @@ API.v1.addRoute('livechat/sms-incoming/:service', {
 			}
 			sendMessage.message.token = visitor.token;
 
-			try {
-				// If there's a department with this number, send it to its channel
-				const department = LivechatDepartment.findByDepartmentPhone(sms.to).fetch();
-				console.log('department in incoming SMS', department[0]);
+			// try {
+			// 	// If there's a department with this number, send it to its channel
+			// 	const department = LivechatDepartment.findByDepartmentPhone(sms.to).fetch();
+			// 	console.log('visitor exists. department in incoming SMS', department[0]);
 
-				if (department && department.length > 0) {
-					console.log('setting department for the visitor now');
-					Livechat.setDepartmentForGuest({ token: visitor.token, department });
-					console.log('updated visitor', visitor);
-				}
-			} catch (error) {
-				console.error('error while getting department in incoming SMS', error);
-			}
+			// 	if (department && department.length > 0) {
+			// 		console.log('setting department for the visitor now');
+			// 		Livechat.setDepartmentForGuest({ token: visitor.token, department });
+			// 		console.log('updated visitor', visitor);
+			// 	}
+			// } catch (error) {
+			// 	console.error('error while getting department in incoming SMS', error);
+			// }
 		} else {
 			sendMessage.message.rid = Random.id();
 			sendMessage.message.token = Random.id();
@@ -102,6 +102,9 @@ API.v1.addRoute('livechat/sms-incoming/:service', {
 				sendMessageToChannel.message.rid = department[0].rid;
 				sendMessageToChannel.message.token = visitor.token;
 				sendMessageToChannel.message._id = Random.id();
+				console.log('setting department for the visitor now');
+				Livechat.setDepartmentForGuest({ token: visitor.token, department });
+				console.log('updated visitor', visitor);
 			}
 		} catch (error) {
 			console.error('error while getting department in incoming SMS', error);

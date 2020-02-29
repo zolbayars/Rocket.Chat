@@ -102,7 +102,7 @@ API.v1.addRoute('livechat/sms-incoming/:service', {
 			console.log('department in incoming SMS', department[0]);
 
 			if (department && department.length > 0) {
-				sendMessageToChannel = Object.create(sendMessage);
+				sendMessageToChannel = JSON.parse(JSON.stringify(sendMessage));
 				sendMessageToChannel.message.rid = department[0].rid;
 				sendMessageToChannel.message.token = visitor.token;
 				sendMessageToChannel.message._id = Random.id();

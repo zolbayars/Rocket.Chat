@@ -107,7 +107,7 @@ API.v1.addRoute('livechat/sms-incoming/:service', {
 				sendMessageToChannel.message.token = visitor.token;
 				sendMessageToChannel.message._id = Random.id();
 				console.log('setting department for the visitor now');
-				Livechat.setDepartmentForGuest({ token: visitor.token, department });
+				Livechat.setDepartmentForGuest({ token: visitor.token, department: department[0]._id });
 				console.log('updated visitor', visitor);
 			}
 		} catch (error) {

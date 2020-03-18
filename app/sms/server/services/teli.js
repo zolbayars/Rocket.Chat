@@ -175,7 +175,6 @@ class Teli {
 
 	// }
 	response(/* message */) {
-		console.log('Teli response called');
 		return {
 			headers: {
 				'Content-Type': 'text/xml',

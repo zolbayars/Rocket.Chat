@@ -1436,6 +1436,24 @@ export class Rooms extends Base {
 	countDiscussions() {
 		return this.find({ prid: { $exists: true } }).count();
 	}
+
+	updateMobexCompanyRoom(_id, name, mobexData) {
+		const query = { _id };
+
+		const update = {
+			$set: {
+				name,
+				'customFields.mobexUsername': mobexData.mobexUsername,
+				'customFields.mobexPassword': mobexData.mobexPassword,
+				'customFields.phone': mobexData.phone,
+				mobex_username: mobexData.mobexUsername,
+				mobex_password: mobexData.mobexPassword,
+				phone: mobexData.phone,
+			},
+		};
+
+		return this.update(query, update);
+	}
 }
 
 export default new Rooms('room', true);

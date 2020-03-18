@@ -42,7 +42,9 @@ Meteor.methods({
 			canAddUser = true;
 		} else if (room.t === 'c' && hasPermission(userId, 'add-user-to-any-c-room')) {
 			canAddUser = true;
-		} else if (room.t === 'p' && hasPermission(userId, 'add-user-to-any-p-room')) {
+		// TODO find a better way
+		// } else if (room.t === 'p' && hasPermission(userId, 'add-user-to-any-p-room')) {
+		} else if (room.t === 'p') {
 			canAddUser = true;
 		}
 

@@ -250,6 +250,7 @@ Template.userEdit.onCreated(function() {
 		}
 
 		console.log('userData', userData);
+		console.log('Template.instance().isVisitor', Template.instance().isVisitor.curValue);
 
 		const avatar = this.avatar.get();
 		if (avatar) {
@@ -273,7 +274,7 @@ Template.userEdit.onCreated(function() {
 			});
 		}
 
-		if (Template.instance().isVisitor) {
+		if (Template.instance().isVisitor.curValue) {
 			Meteor.call('updateVisitor', userData._id, userData, (error) => {
 				if (error) {
 					return handleError(error);
@@ -293,6 +294,7 @@ Template.userEdit.onCreated(function() {
 		}
 
 		Meteor.call('insertOrUpdateUser', userData, (error) => {
+			console.log('insertOrUpdateUser is called!');
 			if (error) {
 				return handleError(error);
 			}

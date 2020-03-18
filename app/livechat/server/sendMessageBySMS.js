@@ -5,9 +5,9 @@ import { SMS } from '../../sms';
 import { LivechatVisitors, Messages, UploadsChunks } from '../../models';
 
 callbacks.add('afterSaveMessage', async function(message, room) {
-	console.log('sendMessageBySms called message', message);
-	console.log('sendMessageBySms called message channels', message.channels);
-	console.log('sendMessageBySms called room', room);
+	// console.log('sendMessageBySms called message', message);
+	// console.log('sendMessageBySms called message channels', message.channels);
+	// console.log('sendMessageBySms called room', room);
 
 	// skips this callback if the message was edited
 	if (message.editedAt) {

@@ -158,6 +158,8 @@ function validateUserEditing(userId, userData) {
 export const saveUser = function(userId, userData) {
 	validateUserData(userId, userData);
 
+	console.log('userData in saveUser', userData);
+
 	if (!userData._id) {
 		validateEmailDomain(userData.email);
 

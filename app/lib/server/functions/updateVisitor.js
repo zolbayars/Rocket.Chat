@@ -58,5 +58,21 @@ function validateUserData(userId, userData) {
 export const updateVisitor = function(visitorId, visitorData) {
 	validateUserData(visitorId, visitorData);
 
+	// let updateObj = {
+	// 	name: visitorData.name,
+	// 	emails: [
+	// 		{
+	// 			address: visitorData.email,
+	// 			verified: visitorData.verified,
+	// 		},
+	// 	],
+	// 	requirePasswordChange: visitorData.requirePasswordChange,
+	// 	roles: visitorData.roles,
+	// };
+
+	// if (visitorData.password !== '' && visitorData.password && visitorData.password.length > 2) {
+	// 	updateObj
+	// }
+
 	LivechatVisitors.update({ _id: visitorId }, { $set: { name: visitorData.name } });
 };

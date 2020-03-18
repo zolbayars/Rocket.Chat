@@ -98,7 +98,14 @@ API.v1.addRoute('livechat/sms-incoming/:service', {
 		// use this to send the SMS to its department channel
 		try {
 			// If there's a department with this number, send it to its channel
-			const department = LivechatDepartment.findByDepartmentPhone(sms.to).fetch();
+			let department = LivechatDepartment.findByDepartmentPhone(sms.to).fetch();
+
+			// TODO check the number by adding 1 digit in front of it
+			if (!department[0]) {
+				console.log('Changed number:', `1${ sms.to }`);
+				department = LivechatDepartment.findByDepartmentPhone(`1${ sms.to }`).fetch();
+			}
+
 			console.log('department in incoming SMS', department[0]);
 
 			if (department && department.length > 0) {

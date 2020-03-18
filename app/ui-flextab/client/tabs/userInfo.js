@@ -189,7 +189,6 @@ Template.userInfo.helpers({
 
 	shouldShowEdit() {
 		const user = Template.instance().user.get();
-		console.log(user);
 
 		if (user.name && user.roles && user.roles.length > 0) {
 			return false;

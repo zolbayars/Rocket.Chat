@@ -257,6 +257,7 @@ export const Livechat = {
 		};
 
 		const user = LivechatVisitors.getVisitorByToken(token, { fields: { _id: 1 } });
+		console.log('user', user);
 		if (user) {
 			return LivechatVisitors.updateById(user._id, updateUser);
 		}

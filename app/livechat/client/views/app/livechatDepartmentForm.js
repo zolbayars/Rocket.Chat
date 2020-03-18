@@ -94,11 +94,11 @@ Template.livechatDepartmentForm.events({
 		// TODO - here we have to update the current private group
 		try {
 			const validChannelName = departmentData.name.trim().replace(/\s/gi, '-');
+			const members = departmentAgents.map((agent) => agent.username);
 
 			Meteor.call('livechat:checkDepartmentChannel', validChannelName, function(error, currentChannel) {
 				console.log('currentChannel', currentChannel);
 				if (error || !currentChannel || currentChannel.length === 0) {
-					const members = departmentAgents.map((agent) => agent.username);
 					members.push('rocket.cat');
 					members.push('mobex.bot');
 
@@ -122,8 +122,16 @@ Template.livechatDepartmentForm.events({
 							});
 						});
 				} else {
-					departmentData.rid = currentChannel._id;
+					departmentData.rid = currentChannel[0]._id;
 
+					const mobexData = {
+						mobexUsername: departmentData.mobexUsername,
+						mobexPassword: departmentData.mobexPassword,
+						phone: departmentData.phone,
+					};
+
+					Meteor.call('addUsersToRoom', { rid: currentChannel[0]._id, users: members });
+					Meteor.call('updateCompanyGroup', { rid: currentChannel[0]._id, name: currentChannel[0].name, mobexData });
 					Meteor.call('livechat:saveDepartment', _id, departmentData, departmentAgents, function(error/* , result*/) {
 						$btn.html(oldBtnValue);
 						if (error) {

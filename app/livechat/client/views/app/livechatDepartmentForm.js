@@ -250,6 +250,12 @@ Template.livechatDepartmentForm.events({
 	'click .remove-agent'(e, instance) {
 		e.preventDefault();
 
+		try {
+			Meteor.call('removeUserFromRoom', { rid: instance.department.get().rid, username: this.username });
+		} catch (error) {
+			console.error(error);
+		}
+
 		instance.departmentAgents.set(instance.departmentAgents.get().filter((agent) => agent.agentId !== this.agentId));
 	},
 

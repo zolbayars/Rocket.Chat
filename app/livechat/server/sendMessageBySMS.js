@@ -88,7 +88,6 @@ callbacks.add('afterSaveMessage', async function(message, room) {
 		// SMSService.send(room.customFields.phone, message.customFields.toNumber, message.customFields.text,
 		// 	room.customFields.mobexUsername, room.customFields.mobexPassword);
 	} else if (message.tmid && room.phone) {
-
 		// Sending message to a number from a company channel
 		const thread = Messages.findThreadById(message.tmid, room._id);
 		const toUser = parseInt(thread.u.username);

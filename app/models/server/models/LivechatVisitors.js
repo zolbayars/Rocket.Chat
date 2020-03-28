@@ -90,6 +90,15 @@ export class LivechatVisitors extends Base {
 		return this.findOne(query);
 	}
 
+	findOneVisitorByPhoneAndDepartment(phone, departmentId) {
+		const query = {
+			'phone.phoneNumber': phone,
+			department: departmentId,
+		};
+
+		return this.findOne(query);
+	}
+
 	findVisitorByPhone(phone, options) {
 		const query = {
 			'phone.phoneNumber': phone,

@@ -217,6 +217,27 @@ export class LivechatRooms extends Base {
 		return this.findOne(query, options);
 	}
 
+	// Used to receive livechat messages on a channel
+	findOneByDepartmentName = function(name) {
+		const query = {
+			name,
+		};
+
+		return this.find(query);
+	};
+
+
+	findOneByVisitorTokenAndDepartmentId(visitorToken, departmentId, options) {
+		const query = {
+			t: 'l',
+			open: true,
+			'v.token': visitorToken,
+			departmentId,
+		};
+
+		return this.findOne(query, options);
+	}
+
 	findOpenByVisitorTokenAndDepartmentId(visitorToken, departmentId, options) {
 		const query = {
 			t: 'l',

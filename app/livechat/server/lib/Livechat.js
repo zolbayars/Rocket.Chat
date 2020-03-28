@@ -112,6 +112,7 @@ export const Livechat = {
 		let newRoom = false;
 
 		if (room && !room.open) {
+			console.log('inside', room.open);
 			message.rid = Random.id();
 			room = null;
 		}

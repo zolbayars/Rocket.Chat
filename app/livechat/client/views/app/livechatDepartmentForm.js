@@ -105,6 +105,9 @@ Template.livechatDepartmentForm.events({
 		if (hasPermission('manage-livechat-departments')) {
 			const enabled = instance.$('input[name=enabled]:checked').val();
 			const name = instance.$('input[name=name]').val();
+			const phone = instance.$('input[name=phone]').val();
+			const mobexUsername = instance.$('input[name=mobexUsername]').val();
+			const mobexPassword = instance.$('input[name=mobexPassword]').val();
 			const description = instance.$('textarea[name=description]').val();
 			const showOnRegistration = instance.$('input[name=showOnRegistration]:checked').val();
 			const email = instance.$('input[name=email]').val();
@@ -126,6 +129,9 @@ Template.livechatDepartmentForm.events({
 			departmentData = {
 				enabled: enabled === '1',
 				name: name.trim(),
+				phone: phone.trim(),
+				mobexUsername: mobexUsername.trim(),
+				mobexPassword: mobexPassword.trim(),
 				description: description.trim(),
 				showOnRegistration: showOnRegistration === '1',
 				showOnOfflineForm: showOnOfflineForm === '1',
@@ -178,7 +184,12 @@ Template.livechatDepartmentForm.events({
 					members.push('mobex.bot');
 
 					Meteor.call('createPrivateGroup', validChannelName,
-						members, {}, { open: true, mobexUsername, mobexPassword, phone }, function(error, channelCreationResult) {
+						members, {}, {
+							open: true,
+							mobexUsername: departmentData.mobexUsername,
+							mobexPassword: departmentData.mobexPassword,
+							phone: departmentData.phone,
+						}, function(error, channelCreationResult) {
 							if (error) {
 								console.error('Error while creating a channel for department', error.message);
 								return toastr.error(t('Could_not_create_department_channel'));

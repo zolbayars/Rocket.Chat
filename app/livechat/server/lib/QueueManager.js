@@ -18,10 +18,6 @@ export const QueueManager = {
 			department: Match.Maybe(String),
 		}));
 
-		if (!checkServiceStatus({ guest, agent })) {
-			throw new Meteor.Error('no-agent-online', 'Sorry, no online agents');
-		}
-
 		const { rid } = message;
 		const name = (roomInfo && roomInfo.fname) || guest.name || guest.username;
 
@@ -32,6 +28,12 @@ export const QueueManager = {
 
 		if (!agent) {
 			agent = RoutingManager.getMethod().delegateAgent(agent, inquiry);
+		}
+
+		if (!checkServiceStatus({ guest, agent })) {
+			console.log('guest', guest);
+			console.log('agent', agent);
+			throw new Meteor.Error('no-agent-online', 'Sorry, no online agents');
 		}
 
 		inquiry = await callbacks.run('livechat.beforeRouteChat', inquiry, agent);

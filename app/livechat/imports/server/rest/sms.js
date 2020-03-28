@@ -5,6 +5,7 @@ import { LivechatRooms, LivechatVisitors, LivechatDepartment } from '../../../..
 import { API } from '../../../../api';
 import { SMS } from '../../../../sms';
 import { Livechat } from '../../../server/lib/Livechat';
+import { sendMessage } from '../../../../lib/server/functions/sendMessage';
 
 const defineDepartment = (idOrName) => {
 	if (!idOrName || idOrName === '') {
@@ -15,8 +16,14 @@ const defineDepartment = (idOrName) => {
 	return department && department._id;
 };
 
-const defineVisitor = (smsNumber) => {
-	const visitor = LivechatVisitors.findOneVisitorByPhone(smsNumber);
+const defineVisitor = (smsNumber, departmentId) => {
+	let visitor;
+	if (departmentId) {
+		console.log('dep id to check', departmentId);
+		visitor = LivechatVisitors.findOneVisitorByPhoneAndDepartment(smsNumber, departmentId);
+	} else {
+		visitor = LivechatVisitors.findOneVisitorByPhone(smsNumber);
+	}
 	let data = {
 		token: (visitor && visitor.token) || Random.id(),
 	};
@@ -40,15 +47,18 @@ const defineVisitor = (smsNumber) => {
 };
 
 const normalizeLocationSharing = (payload) => {
-	const { extra: { fromLatitude: latitude, fromLongitude: longitude } } = payload;
-	if (!latitude || !longitude) {
-		return;
+	try {
+		const { extra: { fromLatitude: latitude, fromLongitude: longitude } } = payload;
+		if (!latitude || !longitude) {
+			return null;
+		}
+		return {
+			type: 'Point',
+			coordinates: [parseFloat(longitude), parseFloat(latitude)],
+		};
+	} catch (error) {
+		return null;
 	}
-
-	return {
-		type: 'Point',
-		coordinates: [parseFloat(longitude), parseFloat(latitude)],
-	};
 };
 
 API.v1.addRoute('livechat/sms-incoming/:service', {
@@ -56,12 +66,30 @@ API.v1.addRoute('livechat/sms-incoming/:service', {
 		const SMSService = SMS.getService(this.urlParams.service);
 		const sms = SMSService.parse(this.bodyParams);
 
-		let visitor = defineVisitor(sms.from);
+		// If there's a department with this number, send it to its channel
+		let department = LivechatDepartment.findByDepartmentPhone(sms.to).fetch();
+		let departmentId = null;
+		// TODO check the number by adding 1 digit in front of it
+		if (!department[0]) {
+			console.log('Changed number:', `1${ sms.to }`);
+			department = LivechatDepartment.findByDepartmentPhone(`1${ sms.to }`).fetch();
+		}
+
+		console.log('department in incoming SMS', department[0]);
+
+		let visitor;
+		if (department && department.length > 0) {
+			departmentId = department[0]._id;
+			visitor = defineVisitor(sms.from, departmentId);
+		} else {
+			visitor = defineVisitor(sms.from);
+		}
+
 		const { token } = visitor;
-		const room = LivechatRooms.findOneOpenByVisitorToken(token);
+		const room = LivechatRooms.findOneByVisitorTokenAndDepartmentId(token, departmentId);
 		const location = normalizeLocationSharing(sms);
 
-		const sendMessage = {
+		const messageToSend = {
 			message: {
 				_id: Random.id(),
 				rid: (room && room._id) || Random.id(),
@@ -78,19 +106,19 @@ API.v1.addRoute('livechat/sms-incoming/:service', {
 		};
 		let sendMessageToChannel = null;
 
-		console.log('visitor', visitor);
-
 		if (visitor) {
-			const rooms = LivechatRooms.findOpenLivechatByVisitorToken(visitor.token).fetch();
+			try {
+				const rooms = LivechatRooms.findOpenByVisitorTokenAndDepartmentId(visitor.token, departmentId).fetch();
 
-			console.log('room on findOpenLivechatByVisitorToken', rooms);
-
-			if (rooms && rooms.length > 0) {
-				sendMessage.message.rid = rooms[0]._id;
-			} else {
-				sendMessage.message.rid = Random.id();
+				if (rooms && rooms.length > 0) {
+					messageToSend.message.rid = rooms[0]._id;
+				} else {
+					messageToSend.message.rid = Random.id();
+				}
+				messageToSend.message.token = visitor.token;
+			} catch (error) {
+				console.error('Error while there is a visitor', error);
 			}
-			sendMessage.message.token = visitor.token;
 
 			// try {
 			// 	// If there's a department with this number, send it to its channel
@@ -106,12 +134,12 @@ API.v1.addRoute('livechat/sms-incoming/:service', {
 			// 	console.error('error while getting department in incoming SMS', error);
 			// }
 		} else {
-			sendMessage.message.rid = Random.id();
-			sendMessage.message.token = Random.id();
+			messageToSend.message.rid = Random.id();
+			messageToSend.message.token = Random.id();
 
 			const visitorId = Livechat.registerGuest({
 				username: sms.from.replace(/[^0-9]/g, ''),
-				token: sendMessage.message.token,
+				token: messageToSend.message.token,
 				phone: {
 					number: sms.from,
 				},
@@ -120,10 +148,11 @@ API.v1.addRoute('livechat/sms-incoming/:service', {
 			visitor = LivechatVisitors.findOneById(visitorId);
 		}
 
-		sendMessage.message.msg = sms.body;
-		sendMessage.guest = visitor;
 
-		sendMessage.message.attachments = sms.media.map((curr) => {
+		messageToSend.message.msg = sms.body;
+		messageToSend.guest = visitor;
+
+		messageToSend.message.attachments = sms.media.map((curr) => {
 			const attachment = {
 				message_link: curr.url,
 			};
@@ -147,49 +176,51 @@ API.v1.addRoute('livechat/sms-incoming/:service', {
 		// Mobex Department Creation
 		// use this to send the SMS to its department channel
 		try {
-			// If there's a department with this number, send it to its channel
-			let department = LivechatDepartment.findByDepartmentPhone(sms.to).fetch();
-
-			// TODO check the number by adding 1 digit in front of it
-			if (!department[0]) {
-				console.log('Changed number:', `1${ sms.to }`);
-				department = LivechatDepartment.findByDepartmentPhone(`1${ sms.to }`).fetch();
-			}
-
-			console.log('department in incoming SMS', department[0]);
-
 			if (department && department.length > 0) {
-				sendMessageToChannel = JSON.parse(JSON.stringify(sendMessage));
+				sendMessageToChannel = JSON.parse(JSON.stringify(messageToSend));
 				sendMessageToChannel.message.rid = department[0].rid;
 				sendMessageToChannel.message.token = visitor.token;
 				sendMessageToChannel.message._id = Random.id();
-				console.log('setting department for the visitor now');
+				sendMessageToChannel.room = {};
+				sendMessageToChannel.room._id = department[0].rid;
 				Livechat.setDepartmentForGuest({ token: visitor.token, department: department[0]._id });
-				console.log('updated visitor', visitor);
 			}
 		} catch (error) {
 			console.error('error while getting department in incoming SMS', error);
 		}
 
+		console.log('messageToSend', messageToSend);
+		console.log('sendMessageToChannel', sendMessageToChannel);
 		try {
-			const message = SMSService.response.call(this, Promise.await(Livechat.sendMessage(sendMessage)));
+			const message = SMSService.response.call(this, Promise.await(Livechat.sendMessage(messageToSend)));
+			console.log('message result', message);
 
 			if (sendMessageToChannel) {
-				const messageToChannel = SMSService.response.call(this, Livechat.sendMessage(sendMessageToChannel));
-				console.log('messageToChannel', messageToChannel);
+				const user = {
+					_id: sendMessageToChannel.guest._id,
+					username: sendMessageToChannel.guest.username,
+					name: sendMessageToChannel.guest.username,
+				};
+				const room = {
+					_id: sendMessageToChannel.room._id,
+					customFields: {
+						mobexUsername: 'john',
+					},
+				};
+				const messageToChannel = Promise.await(sendMessage(user, sendMessageToChannel.message, room));
+				console.log('sendMessageToChannel result', messageToChannel);
 			}
-			console.log('message', message);
 
 			Meteor.defer(() => {
 				if (sms.extra) {
 					if (sms.extra.fromCountry) {
-						Meteor.call('livechat:setCustomField', sendMessage.message.token, 'country', sms.extra.fromCountry);
+						Meteor.call('livechat:setCustomField', messageToSend.message.token, 'country', sms.extra.fromCountry);
 					}
 					if (sms.extra.fromState) {
-						Meteor.call('livechat:setCustomField', sendMessage.message.token, 'state', sms.extra.fromState);
+						Meteor.call('livechat:setCustomField', messageToSend.message.token, 'state', sms.extra.fromState);
 					}
 					if (sms.extra.fromCity) {
-						Meteor.call('livechat:setCustomField', sendMessage.message.token, 'city', sms.extra.fromCity);
+						Meteor.call('livechat:setCustomField', messageToSend.message.token, 'city', sms.extra.fromCity);
 					}
 				}
 			});

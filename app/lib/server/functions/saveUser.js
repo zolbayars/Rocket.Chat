@@ -206,6 +206,8 @@ export const saveUser = function(userId, userData) {
 		delete userData.setRandomPassword;
 	}
 
+	console.log('userData in saveUser', userData);
+
 	if (!userData._id) {
 		validateEmailDomain(userData.email);
 

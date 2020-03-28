@@ -20,6 +20,7 @@ import './hooks/saveLastVisitorMessageTs';
 import './methods/addAgent';
 import './methods/addManager';
 import './methods/changeLivechatStatus';
+import './methods/checkDepartmentChannel';
 import './methods/closeByVisitor';
 import './methods/closeRoom';
 import './methods/facebook';

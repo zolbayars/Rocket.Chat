@@ -1144,6 +1144,49 @@ export class Messages extends Base {
 		return this.find({ rid, tcount: { $exists: true } }, { sort: { tlm: -1 }, skip, limit });
 	}
 
+
+	addToOrUpdateThread(userId, newMessageId, newMessageTS, roomId) {
+		const query = {
+			'u._id': userId,
+			rid: roomId,
+		};
+		const threadReplyCount = this.find(query).count();
+		const thread = this.findOne(query);
+		console.log('thread count', threadReplyCount);
+
+		if (threadReplyCount > 1) {
+			const messageUpdateRes = this.update({ _id: newMessageId }, { $set: { tmid: thread._id } });
+			console.log('messageUpdateRes', messageUpdateRes);
+
+			const threadUpdate = {
+				$addToSet: {
+					replies: userId,
+				},
+				$set: {
+					tlm: newMessageTS,
+				},
+				$inc: {
+					tcount: 1,
+				},
+			};
+
+			const threadUpdateRes = this.update({ _id: thread._id }, threadUpdate);
+			console.log('threadUpdateRes', threadUpdateRes);
+
+			return threadUpdateRes;
+		}
+
+		return thread;
+	}
+
+	findThreadById(tmid, roomId) {
+		const query = {
+			_id: tmid,
+			rid: roomId,
+		};
+		return this.findOne(query);
+	}
+
 	findAgentLastMessageByVisitorLastMessageTs(roomId, visitorLastMessageTs) {
 		const query = {
 			rid: roomId,

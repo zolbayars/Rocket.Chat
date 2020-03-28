@@ -29,6 +29,12 @@ export class LivechatDepartment extends Base {
 		return this.find(query, options);
 	}
 
+	findByDepartmentPhone(phone, options) {
+		const query = { phone };
+
+		return this.find(query, options);
+	}
+
 	createOrUpdateDepartment(_id, data = {}, agents) {
 		// We need to allow updating Departments without having to inform agents, so now we'll only
 		// update the agent/numAgents fields when the agent parameter is an Array, otherwise we skipp those fields

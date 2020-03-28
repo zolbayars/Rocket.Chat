@@ -51,7 +51,19 @@ class Mobex {
 		return returnData;
 	}
 
+	getServiceName() {
+		return 'mobex';
+	}
+
 	send(fromNumber, toNumber, message, username = null, password = null, address = null) {
+		console.log('Mobex send fromNumber', fromNumber);
+		console.log('Mobex send toNumber', toNumber);
+		console.log('Mobex send message', message);
+		console.log('Mobex send username', username);
+		console.log('Mobex send address', address);
+		console.log('Mobex send password', password);
+		console.log('Mobex send from', this.from);
+
 		let currentFrom = this.from;
 		let currentUsername = this.username;
 		let currentAddress = this.address;
@@ -91,10 +103,19 @@ class Mobex {
 	}
 
 	async sendBatch(fromNumber, toNumbersArr, message) {
+		console.log('Mobex send fromNumber', fromNumber);
+		console.log('Mobex send toNumbersArr', toNumbersArr);
+		console.log('Mobex send message', message);
+		console.log('Mobex send username', this.username);
+		console.log('Mobex send rest address', this.restAddress);
+		console.log('Mobex send password', this.password);
+		console.log('Mobex send from', this.from);
+
 		let currentFrom = this.from;
 		if (fromNumber) {
 			currentFrom = fromNumber;
 		}
+		console.log('Mobex send currentFrom', currentFrom);
 
 		const result = {
 			isSuccess: false,

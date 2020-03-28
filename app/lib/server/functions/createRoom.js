@@ -61,6 +61,22 @@ export const createRoom = function(type, name, owner, members = [], readOnly, ex
 		ro: readOnly === true,
 	});
 
+	// Mobex Department Creation Start
+	if (extraData.customFields.open) {
+		room.open = true;
+	}
+
+	if (extraData.customFields.mobexUsername && extraData.customFields.mobexPassword) {
+		room.mobex_username = extraData.customFields.mobexUsername;
+		room.mobex_password = extraData.customFields.mobexPassword;
+		room.phone = extraData.customFields.phone;
+	}
+	// Mobex Department Creation End
+
+	if (type === 'd') {
+		room.usernames = members;
+	}
+
 	if (Apps && Apps.isLoaded()) {
 		const prevent = Promise.await(Apps.getBridges().getListenerBridge().roomEvent('IPreRoomCreatePrevent', room));
 		if (prevent) {

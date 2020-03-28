@@ -1,0 +1,152 @@
+.send-sms-container {
+	display: flex;
+
+	overflow-x: hidden;
+	overflow-y: auto;
+
+	flex-direction: column;
+
+	height: 100vh;
+
+	padding: 0 5rem;
+
+	&-search {
+		width: 100%;
+
+		& .rc-icon {
+			width: 0.875rem;
+		}
+	}
+
+	&-topic {
+		color: var(--rc-color-primary-light);
+	}
+
+	& .rc-input {
+		margin-bottom: 2.5rem;
+	}
+
+	& .rc-input input[type="submit"] {
+		color: var(--button-primary-text-color);
+		background: var(--button-primary-background);
+	}
+
+	& .rc-header--fullpage {
+		padding-left: 0 !important;
+	}
+}
+
+.send-sms-file-preview {
+	display: flex;
+	align-items: center;
+
+	& input[type=file] {
+		position: absolute !important;
+		z-index: 10000;
+		top: 0;
+		left: 0;
+
+		width: 100%;
+		height: 100%;
+
+		cursor: pointer;
+
+		opacity: 0;
+
+		& * {
+			cursor: pointer;
+		}
+	}
+
+	& .preview {
+		overflow: hidden;
+
+		width: 100px;
+		height: 40px;
+
+		margin-right: 0.75rem;
+
+		border-width: var(--input-border-width);
+		border-color: var(--input-border-color);
+		border-radius: var(--input-border-radius);
+
+		background-repeat: no-repeat;
+		background-position: center center;
+		background-size: contain;
+
+		&.no-file {
+			display: flex;
+
+			align-items: center;
+			justify-content: center;
+		}
+	}
+}
+
+.send-sms-icon {
+	color: var(--color-dark-light);
+}
+
+.rc-table-content {
+	display: flex;
+	overflow-x: auto;
+	flex-direction: column;
+	flex: 1 1 100%;
+
+	height: 100vh;
+	padding: 0 1rem;
+
+	& .js-sort {
+		cursor: pointer;
+
+		&.is-sorting .table-fake-th .rc-icon {
+			opacity: 1;
+		}
+	}
+
+	& .table-fake-th {
+		&:hover .rc-icon {
+			opacity: 1;
+		}
+
+		& .rc-icon {
+			transition: opacity 0.3s;
+
+			opacity: 0;
+
+			font-size: 1rem;
+		}
+	}
+}
+
+.send-sms-td--users {
+	overflow: hidden;
+
+	width: 80px;
+
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+@media (width <= 700px) {
+	.rc-table-content {
+		& th:not(:first-child),
+		& td:not(:first-child) {
+			display: none;
+		}
+	}
+}
+
+@media (width <= 1280px) {
+	.send-sms-container {
+		padding: 0 2rem;
+	}
+}
+
+@media (height <= 720px) {
+	.send-sms-container {
+		& .rc-input {
+			margin-bottom: 1rem;
+		}
+	}
+}

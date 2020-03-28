@@ -222,6 +222,15 @@ const toolbarButtons = (user) => [{
 	},
 },
 {
+	name: t('Send_sms_with_mobex'),
+	icon: 'send-sms',
+	condition: () => AccountBox.getItems().length || hasAtLeastOnePermission(['manage-emoji', 'manage-integrations', 'manage-oauth-apps', 'manage-own-integrations', 'manage-sounds', 'view-logs', 'view-privileged-setting', 'view-room-administration', 'view-statistics', 'view-user-administration']),
+	action: () => {
+		menu.close();
+		FlowRouter.go('send-sms');
+	},
+},
+{
 	name: t('Options'),
 	icon: 'menu',
 	condition: () => AccountBox.getItems().length || hasAtLeastOnePermission(['manage-emoji', 'manage-oauth-apps', 'manage-outgoing-integrations', 'manage-incoming-integrations', 'manage-own-outgoing-integrations', 'manage-own-incoming-integrations', 'manage-selected-settings', 'manage-sounds', 'view-logs', 'view-privileged-setting', 'view-room-administration', 'view-statistics', 'view-user-administration', 'access-setting-permissions']),

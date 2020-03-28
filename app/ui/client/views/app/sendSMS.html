@@ -1,0 +1,104 @@
+<template name="sendSMS">
+	<section class="send-sms-container">
+		{{> header sectionName="Send SMS/MMS with Mobex" hideHelp=true fullpage=true}}
+
+			<form class="send-sms__content">
+
+				<div class="rc-input">
+					<label class="rc-input__label">
+						<div class="rc-input__title">{{_ "Send_sms_with_mobex_from"}}</div>
+						<div class="rc-input__wrapper">
+
+							<div class="rc-select">
+								<select class="input-monitor rc-select__element" name="fromNumber" {{isDisabled}} {{isReadonly}}>
+									{{#each fromNumbers}}
+									<option value="{{key}}" dir="auto">{{name}}</option>
+									{{/each}}
+								</select>
+								{{> icon block="rc-select__arrow" icon="arrow-down" }}
+							</div>
+						</div>
+					</label>
+				</div>
+
+				<div class="rc-input {{#if invalidChannel}}rc-input--error{{/if}}">
+					<label class="rc-input__label">
+						<div class="rc-input__title">{{_ "Send_sms_with_mobex_to_number"}}</div>
+						<div class="rc-input__wrapper">
+							<div class="rc-input__icon">
+								{{> icon block="rc-input__icon-svg" icon="message" }}
+							</div>
+							<input name="toNumbers" type="text" class="rc-input__element"
+									 placeholder="{{_ "Send_sms_with_mobex_to_number_placeholder"}}" autofocus>
+						</div>
+					</label>
+					<div class="rc-input__description">{{_ "Send_sms_with_mobex_to_number_description"}}</div>
+					{{#if inUse}}
+						<div class="rc-input__error">
+							<div class="rc-input__error-icon">
+								{{> icon block="rc-input__error-icon" icon="warning" classes="rc-input__error-icon-svg"}}
+							</div>
+							<div class="rc-input__error-message">{{_ "Channel_already_exist_static"}}</div>
+						</div>
+					{{/if}}
+				</div>
+
+				<div class="rc-input">
+					<label class="rc-input__label">
+						<div class="rc-input__title">{{_ "Send_sms_with_mobex_to_number_csv"}}</div>
+						<div class="rc-input__wrapper">
+							<div class="send-sms-file-preview">
+								<div class="preview no-file background-transparent-light secondary-font-color"><i class="icon-upload"></i></div>
+								<div class="action">
+									<div class="rc-button rc-button--primary">{{_ 'Select_file'}}
+										<input type="file" name="toNumbersCSV" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
+									</div>
+								</div>
+							</div>
+						</div>
+					</label>
+					<div class="rc-input__description"><b>{{ uploadedFileName }}</b> {{_ "Send_sms_with_mobex_to_number_csv_description"}}</div>
+				</div>
+
+				<div class="rc-input">
+					<label class="rc-input__label">
+						<div class="rc-input__title">{{_ "Send_sms_with_mobex_text"}}</div>
+						<div class="rc-input__wrapper">
+							<textarea class="input-monitor rc-input__element" name="smsText" rows="3" style="height: auto" {{isDisabled}} {{isReadonly}}>{{value}}</textarea>
+						</div>
+					</label>
+					<div class="rc-input__description">{{_ "Send_sms_with_mobex_char_count"}} <b>{{ smsLength }}</b> {{_ "Send_sms_with_mobex_text_description"}}</div>
+				</div>
+
+				<div class="rc-input">
+					<label class="rc-input__label">
+						<div class="rc-input__title">{{_ "Send_mms_with_mobex_file"}}</div>
+						<div class="rc-input__wrapper">
+							<div class="send-sms-file-preview">
+								<div class="preview no-file background-transparent-light secondary-font-color"><i class="icon-upload"></i></div>
+								<div class="action">
+									<div class="rc-button rc-button--primary">{{_ 'Select_file'}}
+										<input type="file" name="mmsFile" accept="image/*,audio/*,video/*" />
+									</div>
+								</div>
+							</div>
+						</div>
+					</label>
+					<div class="rc-input__description"><b>{{ uploadedMMSFileName }}</b> {{_ "Send_mms_with_mobex_file_description"}}</div>
+					<div class="rc-input__description">{{_ "Send_mms_with_mobex_file_description_1"}}</div>
+					<div class="rc-input__description">{{_ "Send_mms_with_mobex_file_description_2"}}</div>
+				</div>
+
+
+				<div class="rc-input">
+					<div class="rc-input__wrapper">
+						<input class="rc-button rc-button--primary rc-button--full" type="submit" style="display: inline" data-button="create"  value="{{_ "Send SMS"}}">
+						<input id="mms-send-button" class="rc-button rc-button--primary rc-button--full"
+							type="button" style="background-color: #1d74f5; color: white; display: inline" data-button="create"  value="{{_ "Send MMS"}}">
+					</div>
+				</div>
+
+				</form>
+
+	</section>
+</template>

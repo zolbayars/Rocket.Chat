@@ -253,6 +253,18 @@ FlowRouter.route('/admin/:group?', {
 	},
 });
 
+FlowRouter.route('/send-sms', {
+	name: 'send-sms',
+
+	action() {
+		BlazeLayout.render('main', { center: 'sendSMS' });
+	},
+	triggersExit: [function() {
+		$('.main-content').addClass('rc-old');
+	}],
+});
+
+
 FlowRouter.notFound = {
 	action: async () => {
 		const { PageNotFound } = await import('./components/pageNotFound/PageNotFound');

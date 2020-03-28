@@ -131,7 +131,7 @@ export const Livechat = {
 			newRoom = true;
 		}
 
-		if (!room || room.v.token !== guest.token) {
+		if (!room || (room.v && room.v.token !== guest.token)) {
 			throw new Meteor.Error('cannot-access-room');
 		}
 
@@ -270,6 +270,7 @@ export const Livechat = {
 		};
 
 		const user = LivechatVisitors.getVisitorByToken(token, { fields: { _id: 1 } });
+		console.log('user', user);
 		if (user) {
 			return LivechatVisitors.updateById(user._id, updateUser);
 		}
@@ -806,6 +807,13 @@ export const Livechat = {
 		const defaultValidations = {
 			enabled: Boolean,
 			name: String,
+			rid: Match.Maybe(String),
+			phone: Match.Where(function(str) {
+				const reg = new RegExp('^[0-9]{7,15}(,[0-9]{7,15})*$');
+				return reg.test(str);
+			}),
+			mobexUsername: String,
+			mobexPassword: String,
 			description: Match.Optional(String),
 			showOnRegistration: Boolean,
 			email: String,

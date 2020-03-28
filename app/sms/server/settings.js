@@ -24,6 +24,10 @@ Meteor.startup(function() {
 					key: 'mobex',
 					i18nLabel: 'Mobex',
 				},
+				{
+					key: 'teli',
+					i18nLabel: 'Mobex MMS',
+				},
 			],
 			i18nLabel: 'Service',
 		});
@@ -146,6 +150,46 @@ Meteor.startup(function() {
 				i18nLabel: 'Mobex_sms_gateway_from_numbers_list',
 				i18nDescription: 'Mobex_sms_gateway_from_numbers_list_desc',
 			});
+		});
+
+		this.section('Mobex MMS', function() {
+			this.add('SMS_Teli_restful_address', '', {
+				type: 'string',
+				enableQuery: {
+					_id: 'SMS_Service',
+					value: 'teli',
+				},
+				i18nLabel: 'Teli_sms_gateway_restful_address',
+				i18nDescription: 'Teli_sms_gateway_restful_address_desc',
+			});
+			this.add('SMS_Teli_token', '', {
+				type: 'string',
+				enableQuery: {
+					_id: 'SMS_Service',
+					value: 'teli',
+				},
+				i18nLabel: 'Teli_sms_token',
+				i18nDescription: 'Teli_sms_token_desc',
+			});
+			this.add('SMS_Teli_from_number', '', {
+				type: 'int',
+				enableQuery: {
+					_id: 'SMS_Service',
+					value: 'teli',
+				},
+				i18nLabel: 'Teli_sms_from_number',
+				i18nDescription: 'Teli_sms_from_number_desc',
+			});
+		});
+
+		this.add('MMS_Mobex_from_numbers_list', '', {
+			type: 'string',
+			enableQuery: {
+				_id: 'SMS_Service',
+				value: 'teli',
+			},
+			i18nLabel: 'Mobex_sms_gateway_from_numbers_list_mms',
+			i18nDescription: 'Mobex_sms_gateway_from_numbers_list_desc',
 		});
 	});
 });

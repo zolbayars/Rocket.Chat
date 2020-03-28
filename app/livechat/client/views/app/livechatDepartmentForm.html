@@ -23,6 +23,24 @@
 										</div>
 									</div>
 									<div class="input-line">
+										<label>{{_ "SMS Number"}}</label>
+										<div>
+											<input type="tel" class="rc-input__element" name="phone" value="{{department.phone}}" placeholder="{{_ "Phone number to receive or send SMS"}}" />
+										</div>
+									</div>
+									<div class="input-line">
+										<label>{{_ "Mobex SMS Username"}}</label>
+										<div>
+											<input type="text" class="rc-input__element" name="mobexUsername" value="{{department.mobexUsername}}" placeholder="{{_ "Mobex SMS Username"}}" />
+										</div>
+									</div>
+									<div class="input-line">
+										<label>{{_ "Mobex SMS Password"}}</label>
+										<div>
+											<input type="password" class="rc-input__element" name="mobexPassword" value="{{department.mobexPassword}}" placeholder="{{_ "Mobex SMS Password"}}" />
+										</div>
+									</div>
+									<div class="input-line">
 										<label>{{_ "Description"}}</label>
 										<div>
 											<textarea name="description" class="rc-input__element" rows="6">{{department.description}}</textarea>

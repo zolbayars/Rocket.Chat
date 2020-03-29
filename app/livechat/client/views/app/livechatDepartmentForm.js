@@ -208,7 +208,6 @@ Template.livechatDepartmentForm.events({
 						mobexPassword: departmentData.mobexPassword,
 						phone: departmentData.phone,
 					};
-
 					Meteor.call('addUsersToRoom', { rid: currentChannel[0]._id, users: members });
 					Meteor.call('updateCompanyGroup', { rid: currentChannel[0]._id, name: currentChannel[0].name, mobexData });
 					Meteor.call('livechat:saveDepartment', _id, departmentData, departmentAgents, callback);

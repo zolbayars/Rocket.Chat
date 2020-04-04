@@ -106,10 +106,14 @@ API.v1.addRoute('livechat/sms-incoming/:service', {
 		};
 		let sendMessageToChannel = null;
 
+		console.log('visitor', visitor);
+		console.log('departmentId', departmentId);
+
 		if (visitor) {
 			try {
 				const rooms = LivechatRooms.findOpenByVisitorTokenAndDepartmentId(visitor.token, departmentId).fetch();
 
+				console.log('rooms', rooms);
 				if (rooms && rooms.length > 0) {
 					messageToSend.message.rid = rooms[0]._id;
 				} else {
@@ -183,6 +187,7 @@ API.v1.addRoute('livechat/sms-incoming/:service', {
 				sendMessageToChannel.message._id = Random.id();
 				sendMessageToChannel.room = {};
 				sendMessageToChannel.room._id = department[0].rid;
+				messageToSend.guest.department = department[0]._id;
 				Livechat.setDepartmentForGuest({ token: visitor.token, department: department[0]._id });
 			}
 		} catch (error) {

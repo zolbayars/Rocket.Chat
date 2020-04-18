@@ -63,14 +63,14 @@ const toolbarButtons = (user) => [{
 		toolbarSearch.show(false);
 	},
 },
-{
-	name: t('Directory'),
-	icon: 'discover',
-	action: () => {
-		menu.close();
-		FlowRouter.go('directory');
-	},
-},
+// {
+// 	name: t('Directory'),
+// 	icon: 'discover',
+// 	action: () => {
+// 		menu.close();
+// 		FlowRouter.go('directory');
+// 	},
+// },
 {
 	name: t('View_mode'),
 	icon: () => viewModeIcon[getUserPreference(user, 'sidebarViewMode') || 'condensed'],

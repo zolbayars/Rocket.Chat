@@ -1,4 +1,5 @@
 import { HTTP } from 'meteor/http';
+import { Base64 } from 'meteor/base64';
 
 import { SMS } from '../SMS';
 import { settings } from '../../../settings';
@@ -118,62 +119,56 @@ class Teli {
 
 		return result;
 	}
-	// async sendBatch(fromNumber, toNumbersArr, message) {
 
-	// 	console.log('Teli send fromNumber', fromNumber);
-	// 	console.log('Teli send toNumbersArr', toNumbersArr);
-	// 	console.log('Teli send message', message);
-	// 	console.log('Teli send username', this.username);
-	// 	console.log('Teli send rest address', this.restAddress);
-	// 	console.log('Teli send password', this.password);
-	// 	console.log('Teli send from', this.from);
+	// TODO
+	// PLS note this is a mock implementation. Teli doesn't have API for batch SMS
+	async sendBatch(fromNumber, toNumbersArr, message) {
+		console.log('Teli send fromNumber', fromNumber);
+		console.log('Teli send toNumbersArr', toNumbersArr);
+		console.log('Teli send message', message);
+		console.log('Teli send rest address', this.address);
+		console.log('Teli send password', this.token);
+		console.log('Teli send from', this.from);
 
-	// 	let currentFrom = this.from;
-	// 	if (fromNumber) {
-	// 		currentFrom = fromNumber;
-	// 	}
-	// 	console.log('Teli send currentFrom', currentFrom);
+		let currentFrom = this.from;
+		if (fromNumber) {
+			currentFrom = fromNumber;
+		}
+		console.log('Teli send currentFrom', currentFrom);
 
-	// 	const result = {
-	// 		isSuccess: false,
-	// 		resultMsg: 'An unknown error happened',
-	// 		response: false,
-	// 	};
+		const result = {
+			isSuccess: false,
+			resultMsg: 'An unknown error happened',
+			response: false,
+		};
+		const type = 'sms';
 
-	// 	const userPass = `${ this.username }:${ this.password }`;
+		try {
+			const response = await HTTP.call('POST', `${ this.address }/${ type }/sendbatch?token=${ this.token }`,
+				{
+					data: {
+						messages: [
+							{
+								to: toNumbersArr,
+								from: currentFrom,
+								content: message,
+							},
+						],
+					},
+				},
+			);
 
-	// 	const authToken = Base64.encode(userPass);
+			result.isSuccess = true;
+			result.resultMsg = 'Success';
+			result.response = response;
+		} catch (e) {
+			result.resultMsg = `Error while sending SMS with Teli. Detail: ${ e }`;
+			console.error('Error while sending SMS with Teli', e);
+		}
 
-	// 	try {
-	// 		const response = await HTTP.call('POST', `${ this.restAddress }/secure/sendbatch`,
-	// 			{
-	// 				headers: {
-	// 					Authorization: `Basic ${ authToken }`,
-	// 				},
-	// 				data: {
-	// 					messages: [
-	// 						{
-	// 							to: toNumbersArr,
-	// 							from: currentFrom,
-	// 							content: message,
-	// 						},
-	// 					],
-	// 				},
-	// 			}
-	// 		);
+		return result;
+	}
 
-	// 		result.isSuccess = true;
-	// 		result.resultMsg = 'Success';
-	// 		result.response = response;
-
-	// 	} catch (e) {
-	// 		result.resultMsg = `Error while sending SMS with Teli. Detail: ${ e }`;
-	// 		console.error('Error while sending SMS with Teli', e);
-	// 	}
-
-	// 	return result;
-
-	// }
 	response(/* message */) {
 		return {
 			headers: {

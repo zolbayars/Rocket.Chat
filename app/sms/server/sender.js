@@ -54,7 +54,7 @@ Meteor.methods({
 		console.log('sendSingleMMS result', result);
 		return result;
 	},
-	async sendBatchSMS(from, to, smsText) {
+	async 'sendBatchSMS'(from, to, smsText) {
 		console.log(`sendBatchSMS called ${ to }`);
 
 		const SMSService = SMS.getService(settings.get('SMS_Service'));

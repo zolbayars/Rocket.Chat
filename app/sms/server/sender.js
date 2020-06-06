@@ -76,7 +76,7 @@ Meteor.methods({
 
 		if (mobexResult.isSuccess) {
 			if (mobexResult.response.statusCode === 200) {
-				console.log('MMS Mobex response: ', mobexResult.response.content);
+				console.log('SMS Mobex response: ', mobexResult.response.content);
 				result.resultMsg = mobexResult.resultMsg;
 				result.isSuccess = true;
 				result.data = mobexResult.response.content;
@@ -111,24 +111,26 @@ Meteor.methods({
 		let failCount = 0;
 
 		toArr.forEach((to) => {
-			const result = SMSService.send(from, to, null, fileName, Buffer.from(fileData).toString('base64'));
-			console.log('sendBatchMMS result', result);
-			if (result.isSuccess) {
-				successCount++;
-				console.log('MMS Mobex response: ', result.response.content);
-				result.resultMsg = result.resultMsg;
-				result.isSuccess = true;
-				result.data = result.response.content;
-			} else {
-				failCount++;
-				result.resultMsg = result.resultMsg;
+			if (to !== '' && to) {
+				const result = SMSService.send(from, to, null, fileName, Buffer.from(fileData).toString('base64'));
+				console.log('sendBatchMMS result', result);
+				if (result.isSuccess) {
+					successCount++;
+					console.log('MMS Mobex response: ', result.response.content);
+					result.resultMsg = result.resultMsg;
+					result.isSuccess = true;
+					result.data = result.response.content;
+				} else {
+					failCount++;
+					result.resultMsg = result.resultMsg;
+				}
 			}
 		});
 
 		if (successCount > failCount) {
 			result.resultMsg = `Successfully sent MMS to ${ successCount } numbers. Failure count: ${ failCount } `;
 			result.isSuccess = true;
-			result.data = result.response.content;
+			// result.data = result.response.content;
 		} else {
 			result.resultMsg = `Failed to send MMS to ${ failCount } numbers. Success count: ${ successCount } `;
 		}

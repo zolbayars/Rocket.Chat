@@ -2984,6 +2984,7 @@
   "Send_sms_with_mobex_char_count": "Character count:",
   "Send_sms_with_mobex_description": "Select a number and send sms to anyone",
   "Send_sms_with_mobex_error": "An error occured while sending SMS",
+  "Send_mms_with_mobex_error": "An error occured while sending MMS",
   "Send_sms_with_mobex_error_from_number_list": "An error occured while getting number list",
   "Send_sms_with_mobex_error_to_num": "Given number or uploaded file is invalid. Look at the descriptions.",
   "Send_sms_with_mobex_error_text": "SMS text is empty!",

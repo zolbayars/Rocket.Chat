@@ -104,6 +104,7 @@ class Teli {
 		try {
 			const response = HTTP.call('POST', `${ this.address }/${ type }/send?token=${ this.token }`,
 				smsBody);
+			result.response = response;
 			if (response.statusCode === 200) {
 				console.log('SMS Teli response: ', response.content);
 				result.resultMsg = response.content;
@@ -120,9 +121,9 @@ class Teli {
 		return result;
 	}
 
-	// TODO
-	// PLS note this is a mock implementation. Teli doesn't have API for batch SMS
-	async sendBatch(fromNumber, toNumbersArr, message) {
+	// Now turned into one-by-one sender
+	// PLS note this was a mock implementation. Teli doesn't have API for batch SMS
+	async sendBatch(fromNumber, toNumbersArr, message, fileName = null, fileData = null) {
 		console.log('Teli send fromNumber', fromNumber);
 		console.log('Teli send toNumbersArr', toNumbersArr);
 		console.log('Teli send message', message);
@@ -141,29 +142,25 @@ class Teli {
 			resultMsg: 'An unknown error happened',
 			response: false,
 		};
-		const type = 'sms';
 
-		try {
-			const response = await HTTP.call('POST', `${ this.address }/${ type }/sendbatch?token=${ this.token }`,
-				{
-					data: {
-						messages: [
-							{
-								to: toNumbersArr,
-								from: currentFrom,
-								content: message,
-							},
-						],
-					},
-				},
-			);
+		const allCount = toNumbersArr.length;
+		let sentCount = 0;
+		let errorMsg = '';
+		toNumbersArr.forEach((number) => {
+			const smsResult = this.send(fromNumber, number, message, fileName, fileData);
+			if (smsResult.isSuccess) {
+				sentCount++;
+			} else {
+				errorMsg = smsResult.resultMsg;
+			}
+			result.response = smsResult.response;
+		});
 
+		if (sentCount === allCount) {
 			result.isSuccess = true;
-			result.resultMsg = 'Success';
-			result.response = response;
-		} catch (e) {
-			result.resultMsg = `Error while sending SMS with Teli. Detail: ${ e }`;
-			console.error('Error while sending SMS with Teli', e);
+			result.resultMsg = `Sent SMS to all ${ sentCount }/${ allCount } numbers`;
+		} else {
+			result.resultMsg = `SMS sent to ${ sentCount } numbers from ${ allCount } numbers. Error: ${ errorMsg }`;
 		}
 
 		return result;

@@ -42,6 +42,16 @@ const readMMSFile = function(f, onLoadCallback) {
 	reader.readAsArrayBuffer(f);
 };
 
+const setLoading = function(button, text) {
+	button.value = text;
+	button.disabled = true;
+};
+
+const resetLoading = function(button, text) {
+	button.value = text;
+	button.disabled = false;
+};
+
 
 Template.sendSMS.onCreated(function() {
 	this.toNumbers = new ReactiveVar(false);
@@ -136,9 +146,14 @@ Template.sendSMS.events({
 			t.mmsFileName.set(input.files[0].name);
 		});
 	},
-	'submit .send-sms__content'(e, instance) {
+	'click #sms-send-button'(e, instance) {
 		e.preventDefault();
 		e.stopPropagation();
+		const sendButton = e.target;
+		const sendButtonText = sendButton.value;
+
+		setLoading(sendButton, 'Sending...');
+
 		let toNumbers = instance.toNumbers.get();
 		const fromNumber = instance.fromNumber.get();
 		const toNumbersCSV = instance.toNumbersCSV.get();
@@ -180,21 +195,23 @@ Template.sendSMS.events({
 
 				if (!err) {
 					if (smsResult.isSuccess) {
-						let smsCountText = '0';
-						try {
-							const mobexGatewayResult = JSON.parse(smsResult.data);
-							smsCountText = mobexGatewayResult.data.messageCount;
-						} catch (e) {
-							console.error('Error in sendBatchSMS sendSMS.js', e);
-						}
+						// let smsCountText = '0';
+						// try {
+						// 	const mobexGatewayResult = JSON.parse(smsResult.data);
+						// 	smsCountText = mobexGatewayResult.data.messageCount;
+						// } catch (e) {
+						// 	console.error('Error in sendBatchSMS sendSMS.js', e);
+						// }
 
-						toastr.success(`${ t('Send_sms_with_mobex_success') } ${ smsCountText } message sent.`);
+						toastr.success(smsResult.resultMsg);
 					} else {
 						toastr.error(smsResult.resultMsg);
 					}
 				} else {
 					toastr.error(t('Send_sms_with_mobex_error'));
 				}
+
+				resetLoading(sendButton, sendButtonText);
 			});
 		} else {
 			Meteor.call('sendSingleSMS', fromNumber, toNumbers, smsText, (err, smsResult) => {
@@ -207,6 +224,7 @@ Template.sendSMS.events({
 				} else {
 					toastr.error(t('Send_sms_with_mobex_error'));
 				}
+				resetLoading(sendButton, sendButtonText);
 			});
 		}
 
@@ -216,6 +234,11 @@ Template.sendSMS.events({
 	'click #mms-send-button'(e, instance) {
 		e.preventDefault();
 		e.stopPropagation();
+
+		const sendButton = e.target;
+		const sendButtonText = sendButton.value;
+		setLoading(sendButton, 'Sending...');
+
 		let toNumbers = instance.toNumbers.get();
 		const fromNumber = instance.fromNumber.get();
 		const toNumbersCSV = instance.toNumbersCSV.get();
@@ -252,21 +275,22 @@ Template.sendSMS.events({
 
 				if (!err) {
 					if (smsResult.isSuccess) {
-						let smsCountText = '0';
-						try {
-							const mobexGatewayResult = JSON.parse(smsResult.data);
-							smsCountText = mobexGatewayResult.data.messageCount;
-						} catch (e) {
-							console.error('Error in sendBatchSMS sendSMS.js', e);
-						}
+						// let smsCountText = '0';
+						// try {
+						// 	const mobexGatewayResult = JSON.parse(smsResult.data);
+						// 	smsCountText = mobexGatewayResult.data.messageCount;
+						// } catch (e) {
+						// 	console.error('Error in sendBatchSMS sendSMS.js', e);
+						// }
 
-						toastr.success(`${ t('Send_sms_with_mobex_success') } ${ smsCountText } message sent.`);
+						toastr.success(smsResult.resultMsg);
 					} else {
 						toastr.error(smsResult.resultMsg);
 					}
 				} else {
-					toastr.error(t('Send_sms_with_mobex_error'));
+					toastr.error(t('Send_mms_with_mobex_error'));
 				}
+				resetLoading(sendButton, sendButtonText);
 			});
 		} else {
 			Meteor.call('sendSingleMMS', fromNumber, toNumbers, mmsFileName, new Uint8Array(mmsFile), (err, smsResult) => {
@@ -277,8 +301,9 @@ Template.sendSMS.events({
 						toastr.error(smsResult.resultMsg);
 					}
 				} else {
-					toastr.error(t('Send_sms_with_mobex_error'));
+					toastr.error(t('Send_mms_with_mobex_error'));
 				}
+				resetLoading(sendButton, sendButtonText);
 			});
 		}
 

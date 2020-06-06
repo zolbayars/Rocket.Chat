@@ -1,5 +1,5 @@
 import { HTTP } from 'meteor/http';
-import { Base64 } from 'meteor/base64';
+// import { Base64 } from 'meteor/base64';
 
 import { SMS } from '../SMS';
 import { settings } from '../../../settings';
